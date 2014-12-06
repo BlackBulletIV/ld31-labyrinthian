@@ -1,7 +1,7 @@
-Walls = class("Walls", Entity)
+Walls = class("Walls", PhysicalEntity)
 
 function Walls:initialize(xml, width, height)
-  Entity.initialize(self)
+  PhysicalEntity.initialize(self, 0, 0, "static")
   self.layer = 1
   self.width = width
   self.height = height
@@ -11,6 +11,7 @@ function Walls:initialize(xml, width, height)
 end
 
 function Walls:added()
+  self:setupBody()
   if self.xml then self:setupFromXML(self.xml) end
 end
 
@@ -35,7 +36,7 @@ function Walls:setupFromXML(xml)
   
   for _, v in ipairs(findChildren(elem, "rect")) do
     local w, h = tonumber(v.attr.w), tonumber(v.attr.h)
-    self.world:add(CollisionRect:new(tonumber(v.attr.x), tonumber(v.attr.y), w, h))
+    self:addShape(love.physics.newRectangleShape(tonumber(v.attr.x) + w / 2, tonumber(v.attr.y) + h / 2, w, h))
   end
 end
 

@@ -9,16 +9,12 @@ slaxml = require("slaxdom")
 require("misc.xmlUtils")
 require("misc.utils")
 
-require("entities.PhysicalEntity")
 require("entities.Player")
-require("entities.Floor")
-require("entities.CollisionRect")
+require("entities.Walls")
 require("entities.Bullet")
 require("worlds.Level")
 
 TILE_SIZE = 9
-GRAVITY = 850
-FRICTION = 50
 
 function love.load()
   assets.loadFont("uni05.ttf", { 24, 16, 8 }, "main")
@@ -30,9 +26,9 @@ function love.load()
   
   input.define("left", "a", "left")
   input.define("right", "d", "right")
-  input.define("jump", "w", "up", " ")
+  input.define("up", "w", "up")
+  input.define("down", "s", "down")
   input.define{"fire", mouse = "l"}
-  input.define("flip", "f")
   input.define("quit", "escape")
   
   postfx.init()

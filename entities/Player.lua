@@ -21,38 +21,55 @@ function Player:initialize(x, y)
   self.width = Player.width
   self.height = Player.height
   self.image = assets.images.player
-  self.accel = 1100
-  self.jumpSpeed = 200
+  self.speed = 1800
   self.health = 2
   self.weapon = "pistol"
   self.weaponTimer = 0
 end
 
+function Player:added()
+  self:setupBody()
+  self.fixture = self:addShape(love.physics.newRectangleShape(self.width, self.height))
+  self:setMass(2)
+  self:setLinearDamping(10)
+end
+
 function Player:update(dt)
-  local axis = input.axisDown("left", "right")
-  self.velx = self.velx + self.accel * axis * dt
-  
-  if input.pressed("jump") and not self.inAir then
-    self.vely = -self.jumpSpeed * math.sign(self.gravityMult)
-  end
-  
-  if input.pressed("flip") then self.gravityMult = -self.gravityMult end
+  PhysicalEntity.update(self, dt)
+  self:setAngularVelocity(0)
+  self.angle = math.angle(self.x, self.y, getMouse())
+  local dir = self:getDirection()
+  if dir then self:applyForce(self.speed * math.cos(dir), self.speed * math.sin(dir)) end
+    
   if input.pressed("fire") then self:fireWeapon() end
   
   if self.weaponTimer > 0 then self.weaponTimer = self.weaponTimer - dt end
-  PhysicalEntity.update(self, dt)
 end
 
 function Player:draw()
   self:drawImage()
-  love.graphics.setColor(0, 255, 0)
-  love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+  love.graphics.point(self.x, self.y)
 end
 
 function Player:fireWeapon()
   if self.weaponTimer <= 0 then
     local px, py = self.x + self.width / 2, self.y + self.height / 2
-    self.world:add(Bullet:new(px, py, math.angle(px, py, mouse.x, mouse.y)))
+    self.world:add(Bullet:new(px, py, math.angle(px, py, getMouse())))
     self.weaponTimer = 1 / Player.weapons[self.weapon].rate
+  end
+end
+
+function Player:getDirection()
+  local xAxis = input.axisDown("left", "right")
+  local yAxis = input.axisDown("up", "down")
+  local xAngle = xAxis == 1 and 0 or (xAxis == -1 and math.tau / 2 or nil)
+  local yAngle = yAxis == 1 and math.tau / 4 or (yAxis == -1 and math.tau * 0.75 or nil)
+  
+  if xAngle and yAngle then
+    -- x = 1, y = -1 is a special case the doesn't fit; not sure what I can do about it other than this:
+    if xAxis == 1 and yAxis == -1 then return yAngle + math.tau / 8 end
+    return (xAngle + yAngle) / 2
+  else
+    return xAngle or yAngle
   end
 end
