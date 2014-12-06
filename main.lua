@@ -9,8 +9,10 @@ slaxml = require("slaxdom")
 require("misc.xmlUtils")
 require("misc.utils")
 
+require("entities.PhysicalEntity")
 require("entities.Player")
 require("entities.Floor")
+require("entities.CollisionRect")
 require("worlds.Level")
 
 TILE_SIZE = 9

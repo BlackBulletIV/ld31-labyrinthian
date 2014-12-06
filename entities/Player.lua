@@ -15,28 +15,24 @@ function Player:initialize(x, y)
   self.width = Player.width
   self.height = Player.height
   self.image = assets.images.player
-  self.speed = 150
-  self.jumpForce = 3000
+  self.accel = 900
+  self.jumpSpeed = 150
   self.health = 2
 end
 
-function Player:added()
-  self:setupBody()
-  self.fixture = self:addShape(love.physics.newRectangleShape(self.width, self.height))
-  self:setMass(20)
-  self:setLinearDamping(10)
-end
-
 function Player:update(dt)
-  PhysicalEntity.update(self, dt)
   local axis = input.axisDown("left", "right")
-  self.velx = self.speed * axis
+  self.velx = self.velx + self.accel * axis * dt
   
-  if input.pressed("jump") then
-    self:applyLinearImpulse(0, -self.jumpForce)
+  if not self.inAir and input.pressed("jump") then
+    self.vely = self.jumpSpeed
   end
+  
+  PhysicalEntity.update(self, dt)
 end
 
 function Player:draw()
   self:drawImage()
+  love.graphics.setColor(0, 255, 0)
+  love.graphics.rectangle("line", self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
 end

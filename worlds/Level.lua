@@ -1,8 +1,8 @@
-Level = class("Level", PhysicalWorld)
+Level = class("Level", World)
 Level.static.list = { "1" }
 
 function Level:initialize(index)
-  PhysicalWorld.initialize(self)
+  World.initialize(self)
   local xmlFile = love.filesystem.read("assets/levels/" .. Level.list[index] .. ".oel")
   self.xml = slaxml:dom(xmlFile).root
   self.width = getText(self.xml, "width")

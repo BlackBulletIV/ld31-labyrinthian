@@ -1,7 +1,7 @@
 Floor = class("Floor", Entity)
 
 function Floor:initialize(xml, width, height)
-  PhysicalEntity.initialize(self, 0, 0, "static")
+  Entity.initialize(self)
   self.layer = 1
   self.width = width
   self.height = height
@@ -11,7 +11,6 @@ function Floor:initialize(xml, width, height)
 end
 
 function Floor:added()
-  self:setupBody()
   if self.xml then self:setupFromXML(self.xml) end
 end
 
@@ -36,7 +35,7 @@ function Floor:setupFromXML(xml)
   
   for _, v in ipairs(findChildren(elem, "rect")) do
     local w, h = tonumber(v.attr.w), tonumber(v.attr.h)
-    self:addShape(love.physics.newRectangleShape(tonumber(v.attr.x) + w / 2, tonumber(v.attr.y) + h / 2, w, h))
+    self.world:add(CollisionRect:new(tonumber(v.attr.x) + w / 2, tonumber(v.attr.y) + h / 2, w, h))
   end
 end
 

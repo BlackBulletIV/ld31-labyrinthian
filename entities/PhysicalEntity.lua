@@ -1,32 +1,33 @@
-PhyiscalEntity = class("PhyiscalEntity", Entity)
+PhysicalEntity = class("PhysicalEntity", Entity)
 
-function PhyiscalEntity:initialize(x, y, width, height, type)
+function PhysicalEntity:initialize(x, y, width, height, type)
   Entity.initialize(self, x, y)
-  self.width = 0
-  self.height = 0
+  self.width = width
+  self.height = height
   self.type = type or "dynamic"
   self.velx = 0
   self.vely = 0
   self.gravityMult = 1
 end
 
-function PhyiscalEntity:added()
+function PhysicalEntity:added()
   self.world._physicalEntities:push(self)
 end
 
-function PhyiscalEntity:removed()
+function PhysicalEntity:removed()
   self.world._physicalEntities:remove(self)
 end
 
-function PhyiscalEntity:update(dt)
+function PhysicalEntity:update(dt)
   self.inAir = self:collide(self.x, self.y + 1)
   if self.inAir then self.vely = self.vely + GRAVITY * self.gravityMult * dt end
   
   self.velx = self.velx * FRICTION * dt
   self:moveBy(self.velx * dt, self.vely * dt)
+  --print(self.velx * dt, self.vely * dt)
 end
 
-function PhyiscalEntity:collide(x, y, type)
+function PhysicalEntity:collide(x, y, type)
   x = x or self.x
   y = y or self.y
   type = type or "static"
@@ -43,7 +44,7 @@ function PhyiscalEntity:collide(x, y, type)
   end
 end
 
-function PhyiscalEntity:moveBy(x, y, type)
+function PhysicalEntity:moveBy(x, y, type)
   type = type or "static"
   
   if x ~= 0 then
@@ -60,7 +61,7 @@ function PhyiscalEntity:moveBy(x, y, type)
             self.x = self.x + sign
           end
           
-          x -= sign
+          x = x - sign
         end
       end
     else
@@ -82,7 +83,7 @@ function PhyiscalEntity:moveBy(x, y, type)
             self.y = self.y + sign
           end
           
-          y -= sign
+          y = y - sign
         end
       end
     else
@@ -91,10 +92,14 @@ function PhyiscalEntity:moveBy(x, y, type)
   end
 end
 
-function PhyiscalEntity:collideX(entity)
+function PhysicalEntity:collideX(entity)
+  print(entity.id, "x", love.timer.getDelta())
+  self.velx = 0
   return true
 end
 
-function PhyiscalEntity:collideY(entity)
+function PhysicalEntity:collideY(entity)
+  print(entity.id, "y", love.timer.getDelta())
+  self.vely = 0
   return true
 end
