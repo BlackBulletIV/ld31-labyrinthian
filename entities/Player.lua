@@ -2,7 +2,7 @@ Player = class("Player", PhysicalEntity)
 Player.static.width = 9
 Player.static.height = 14
 
-function Player.static.weapons = {
+Player.static.weapons = {
   pistol = {
     rate = 4 -- per second
   }
@@ -45,13 +45,14 @@ end
 
 function Player:draw()
   self:drawImage()
-  --love.graphics.setColor(0, 255, 0)
-  --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+  love.graphics.setColor(0, 255, 0)
+  love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
 
 function Player:fireWeapon()
   if self.weaponTimer <= 0 then
+    local px, py = self.x + self.width / 2, self.y + self.height / 2
+    self.world:add(Bullet:new(px, py, math.angle(px, py, mouse.x, mouse.y)))
     self.weaponTimer = 1 / Player.weapons[self.weapon].rate
-    self.world:add(Bullet:new(self.x, self.y, math.angle(self.x, self.y, mouse.x, mouse.y)))
   end
 end

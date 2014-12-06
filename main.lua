@@ -1,5 +1,4 @@
 require("lib.ammo")
---require("lib.physics")
 require("lib.assets")
 require("lib.input")
 require("lib.tweens")
@@ -13,6 +12,7 @@ require("entities.PhysicalEntity")
 require("entities.Player")
 require("entities.Floor")
 require("entities.CollisionRect")
+require("entities.Bullet")
 require("worlds.Level")
 
 TILE_SIZE = 9
@@ -24,6 +24,7 @@ function love.load()
   
   assets.loadImage("tiles.png")
   assets.loadImage("player.png")
+  assets.loadImage("bullet.png")
   for _, v in pairs(assets.images) do v:setFilter("nearest", "nearest") end
   
   input.define("left", "a", "left")

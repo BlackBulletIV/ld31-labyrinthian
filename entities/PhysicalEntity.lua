@@ -2,8 +2,8 @@ PhysicalEntity = class("PhysicalEntity", Entity)
 
 function PhysicalEntity:initialize(x, y, width, height, type)
   Entity.initialize(self, x, y)
-  self.width = width
-  self.height = height
+  self.width = width or 0
+  self.height = height or 0
   self.type = type or "dynamic"
   self.velx = 0
   self.vely = 0
@@ -19,7 +19,7 @@ function PhysicalEntity:removed()
 end
 
 function PhysicalEntity:update(dt)
-  if self.type == "static" then return end
+  if self.type ~= "dynamic" then return end
   self.inAir = not self:collide(self.x, self.y + math.sign(self.gravityMult))
   if self.inAir then self.vely = self.vely + GRAVITY * self.gravityMult * dt end
   
@@ -58,7 +58,7 @@ function PhysicalEntity:moveBy(x, y, type, precision)
         while x ~= 0 do
           entity = self:collide(self.x + sign, self.y, type)
           
-          if entity and self:collideX(entity) then
+          if entity and self:moveCollideX(entity) then
             break
           else
             self.x = self.x + sign
@@ -80,7 +80,7 @@ function PhysicalEntity:moveBy(x, y, type, precision)
         while y ~= 0 do
           entity = self:collide(self.x, self.y + sign, type)
           
-          if entity and self:collideY(entity) then
+          if entity and self:moveCollideY(entity) then
             break
           else
             self.y = self.y + sign
@@ -98,12 +98,12 @@ function PhysicalEntity:moveBy(x, y, type, precision)
   --self.y = math.round(self.y)
 end
 
-function PhysicalEntity:collideX(entity)
+function PhysicalEntity:moveCollideX(entity)
   self.velx = 0
   return true
 end
 
-function PhysicalEntity:collideY(entity)
+function PhysicalEntity:moveCollideY(entity)
   self.vely = 0
   return true
 end
