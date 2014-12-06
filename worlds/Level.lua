@@ -9,15 +9,16 @@ function Level:initialize(index)
   self.height = getText(self.xml, "height")
     
   self.walls = Walls:new(self.xml, self.width, self.height)
-  self:add(self.walls)
+  self.floor = Floor:new(self.xml, self.width, self.height)
+  self:add(self.walls, self.floor)
   self:loadObjects()  
   
   self:setupLayers{
-    [1] = 1, -- walls
+    [1] = { 1, pre = postfx.exclude, post = postfx.include }, -- walls
     [3] = 1, -- player
+    [5] = 1, -- projectiles
     [10] = 1 -- floor
   }
-  
 end
 
 function Level:loadObjects()

@@ -4,7 +4,7 @@ Player.static.height = 14
 
 Player.static.weapons = {
   pistol = {
-    rate = 4 -- per second
+    rate = 6 -- per second
   }
 }
 
@@ -21,7 +21,7 @@ function Player:initialize(x, y)
   self.width = Player.width
   self.height = Player.height
   self.image = assets.images.player
-  self.speed = 1800
+  self.speed = 2400
   self.health = 2
   self.weapon = "pistol"
   self.weaponTimer = 0
@@ -30,8 +30,9 @@ end
 function Player:added()
   self:setupBody()
   self.fixture = self:addShape(love.physics.newRectangleShape(self.width, self.height))
+  self.fixture:setCategory(2)
   self:setMass(2)
-  self:setLinearDamping(10)
+  self:setLinearDamping(12)
 end
 
 function Player:update(dt)
@@ -48,13 +49,11 @@ end
 
 function Player:draw()
   self:drawImage()
-  love.graphics.point(self.x, self.y)
 end
 
 function Player:fireWeapon()
   if self.weaponTimer <= 0 then
-    local px, py = self.x + self.width / 2, self.y + self.height / 2
-    self.world:add(Bullet:new(px, py, math.angle(px, py, getMouse())))
+    self.world:add(Bullet:new(self.x, self.y, math.angle(self.x, self.y, getMouse())))
     self.weaponTimer = 1 / Player.weapons[self.weapon].rate
   end
 end

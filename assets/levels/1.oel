@@ -8,6 +8,9 @@
     <rect id="0" x="0" y="216" w="18" h="63"/>
     <rect id="0" x="0" y="198" w="243" h="18"/>
   </collision>
+  <floor set="tiles">
+    <rect id="0" x="0" y="0" w="405" h="306"/>
+  </floor>
   <walls set="tiles">
     <rect id="0" x="0" y="279" w="405" h="27"/>
     <rect id="0" x="0" y="216" w="18" h="63"/>

@@ -8,6 +8,7 @@ function Walls:initialize(xml, width, height)
   self.map = Tilemap:new(assets.images.tiles, TILE_SIZE, TILE_SIZE, width, height)
   self.map.usePositions = true
   self.xml = xml
+  self.color = { 50, 50, 50 }
 end
 
 function Walls:added()
@@ -41,5 +42,6 @@ function Walls:setupFromXML(xml)
 end
 
 function Walls:draw()
+  love.graphics.setColor(self.color)
   self.map:draw(self.x, self.y)
 end

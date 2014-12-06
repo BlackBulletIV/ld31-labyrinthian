@@ -8,9 +8,11 @@ require("lib.gfx")
 slaxml = require("slaxdom")
 require("misc.xmlUtils")
 require("misc.utils")
+require("misc.lighting")
 
 require("entities.Player")
 require("entities.Walls")
+require("entities.Floor")
 require("entities.Bullet")
 require("worlds.Level")
 
@@ -18,6 +20,7 @@ TILE_SIZE = 9
 
 function love.load()
   assets.loadFont("uni05.ttf", { 24, 16, 8 }, "main")
+  assets.loadShader("lighting-composite.frag", "lightingComposite")
   
   assets.loadImage("tiles.png")
   assets.loadImage("player.png")
@@ -33,12 +36,17 @@ function love.load()
   
   postfx.init()
   postfx.scale = 2
+  lighting:init()
+  postfx.add(lighting)
   love.graphics.width = love.graphics.width / 2
   love.graphics.height = love.graphics.height / 2
+  
   ammo.world = Level:new(1)
+  ll = lighting:addLight(30, 250, 100, 1)
 end
 
 function love.update(dt)
+  ll.x, ll.y = getMouse()
   postfx.update(dt)
   ammo.update(dt)
   if input.pressed("quit") then love.event.quit() end
