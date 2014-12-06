@@ -88,10 +88,12 @@ function Player:fireWeapon()
     local y = self.y + 8 * math.sin(self.angle)-- + 2 * math.sin(self.angle + math.tau / 4)
     self.world:add(Bullet:new(x, y, math.angle(self.x, self.y, getMouse())))
     self.weaponTimer = 1 / Player.weapons[self.weapon].rate
+    
     self.flashTimer = self.flashTime
     self.flash.alpha = math.random(180, 255)
     self.flash.x = self.x
     self.flash.y = self.y
+    for e in Enemy.all:iterate() do e:playerFire() end
   end
 end
 

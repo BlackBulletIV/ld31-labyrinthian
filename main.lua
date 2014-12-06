@@ -47,7 +47,6 @@ function love.load()
   love.graphics.height = love.graphics.height / 2
   
   ammo.world = Level:new(1)
-  --ll = lighting:addBeam(30, 250, math.tau, 280, math.tau / 32, 30)
 end
 
 function love.update(dt)
@@ -55,8 +54,6 @@ function love.update(dt)
   ammo.update(dt)
   if input.pressed("quit") then love.event.quit() end
   input.update()
-  --ll.x, ll.y = ammo.world.player.x, ammo.world.player.y
-  --ll.angle = math.angle(ammo.world.player.x, ammo.world.player.y, getMouse())
 end
 
 function love.draw()

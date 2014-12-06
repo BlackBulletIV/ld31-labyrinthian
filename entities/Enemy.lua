@@ -1,7 +1,9 @@
 Enemy = class("Enemy", PhysicalEntity)
+Enemy.static.all = LinkedList:new("_enemyNext", "_enemyPrev")
 
 function Enemy:initialize(x, y, width, height)
   PhysicalEntity.initialize(self, x, y, "dynamic")
+  self.layer = 4
   self.width = width
   self.height = height
   self.alert = 0 -- 0: unaware, 1: suspicious, 2: searching, 3: engaging
@@ -10,14 +12,21 @@ function Enemy:initialize(x, y, width, height)
   self.patrolMin = 2
   self.patrolMax = 5
   self.patrolTimer = 0
-  self.layer = 4
+  
+  self.searchTimer = 0
+  self.searchPauseTimer = 0
+  self.searchPauseMin = 1
+  self.searchPauseMax = 4
+  self.searchIncrement = 10
+  self.searchPerimeter = 0
   
   self.speed = 500
-  self.alertSpeed = 1600
+  self.alertSpeed = 1000
   self.searchTime = 30
-  self.visionRange = 100
+  self.visionRange = 250
   self.visionSpread = math.tau / 3
-  self.hearingRange = 20
+  self.hearingRange = 50
+  self.fireHearingRange = 150
 end
 
 function Enemy:added()
@@ -26,6 +35,12 @@ function Enemy:added()
   self.fixture:setCategory(3)
   self:setMass(2)
   self:setLinearDamping(12)
+  Enemy.all:push(self)
+end
+
+function Enemy:removed()
+  self:destroy()
+  Enemy.all:remove(self)
 end
 
 function Enemy:update(dt)
@@ -38,7 +53,7 @@ function Enemy:update(dt)
     then
       self.movingTo = nil
       if self.movingComplete then
-        self.movingComplete()
+        self.movingComplete(self)
         self.movingComplete = nil
       end
     else
@@ -74,6 +89,48 @@ function Enemy:update(dt)
     else
       self.searchTimer = self.searchTimer - dt
     end
+    
+    if not self.movingTo then
+      if self.searchPauseTimer <= 0 then
+        self.searchPerimeter = self.searchPerimeter + self.searchIncrement
+        local collide = true
+        local px, py, angle
+        
+        repeat
+          if self.lastKnownAngle then
+            angle = self.lastKnownAngle - math.tau / 24 + math.random() * (math.tau / 12)
+          else
+            angle = math.random() * math.tau
+          end
+          
+          px = self.x + math.cos(angle) * self.searchPerimeter
+          py = self.y + math.sin(angle) * self.searchPerimeter
+          local newCollide = false
+          
+          self.world:rayCast(self.x, self.y, px, py, function(fixture)
+            local entity = fixture:getUserData()
+            
+            if instanceOf(Walls, entity) then
+              newCollide = true
+              return 0
+            else
+              return 1
+            end
+          end)
+          
+          if newCollide then
+            self.lastKnownAngle = nil
+          else
+            collide = false
+          end
+        until not collide
+        
+        self:moveTo(px, py, self.resetPauseTimer)
+        self.lastKnownAngle = nil
+      else
+        self.searchPauseTimer = self.searchPauseTimer - dt
+      end
+    end 
   elseif self.alert == 3 then
     local px, py = self.world.player.x, self.world.player.y
     self.angle = math.angle(self.x, self.y, px, py)
@@ -85,6 +142,16 @@ end
 
 function Enemy:draw()
   self:drawImage()
+  if self.rayTest ~= nil then
+    if self.rayTest then
+      love.graphics.setColor(0, 255, 0)
+    else
+      love.graphics.setColor(255, 0, 0)
+    end
+    
+    love.graphics.line(self.x, self.y, self.world.player.x, self.world.player.y)
+    love.graphics.print(self.alert, self.x, self.y)
+  end
 end
 
 function Enemy:moveTo(x, y, complete)
@@ -111,13 +178,13 @@ end
 
 function Enemy:detect()
   local player = self.world.player
-  local detectedVision = self.visionRange > 0
+  local detectedVision = self.visionRange > 0 and (player.torchOn or player.flashTimer > 0)
   local detectedHearing = self.hearingRange > 0
   
   if detectedVision then
     local facing = Vector(math.cos(self.angle), math.sin(self.angle)):normalize()
     local diff = (player.pos - self.pos):normalize()
-    local angle = math.acos(facing * diff)
+    local angle = math.acos(math.clamp(facing * diff, -1, 1))
     
     if angle <= self.visionSpread / 2 then
       self.world:rayCast(self.x, self.y, player.x, player.y, function(fixture)
@@ -125,8 +192,10 @@ function Enemy:detect()
         
         if instanceOf(Walls, entity) then
           detectedVision = false
+          self.rayTest = false
           return 0
         else
+          self.rayTest = true
           return 1
         end
       end)
@@ -147,11 +216,19 @@ function Enemy:detect()
     self.alert = 3
     self.movingTo = nil
   elseif self.alert == 3 then
-    self.alert = 2
-    self.lastKnownPosition = player.pos / 1 -- clone
-    self.lastKnownAngle = player.angle
-    self.searchTimer = self.searchTime
+    self:startSearch()
   end
+end
+
+function Enemy:startSearch(takeAngle)
+  local p = self.world.player
+  self.lastKnownPosition = p.pos / 1 -- clone
+  if takeAngle ~= false then self.lastKnownAngle = p.angle end
+  
+  self.alert = 2
+  self.searchTimer = self.searchTime
+  self.searchPauseTimer = 0
+  self:moveTo(self.lastKnownPosition.x, self.lastKnownPosition.y, self.resetPauseTimer)
 end
 
 function Enemy:die()
@@ -162,11 +239,17 @@ end
 function Enemy:bulletHit(bullet)
   if self.dead then return end
   self.health = self.health - bullet.damage
-  
-  if self.health <= 0 then
-    self:die()
-  elseif self.alert < 3 then
-    self.alert = 2
-    self.angle = (bullet.angle + math.tau / 2) % math.tau -- this shit doesn't work
+  if self.health <= 0 then self:die() end
+end
+
+function Enemy:playerFire()
+  local p = self.world.player.pos
+
+  if self.alert < 3 and self.hearingRange > 0 and math.distance(self.x, self.y, p.x, p.y) < self.fireHearingRange then
+    self:startSearch(false)
   end
+end
+
+function Enemy:resetPauseTimer()
+  self.searchPauseTimer = math.random(self.searchPauseMin * 10, self.searchPauseMax * 10) / 10
 end

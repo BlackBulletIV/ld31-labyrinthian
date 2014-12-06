@@ -122,7 +122,7 @@ function lighting:init()
 end
 
 function lighting:draw(canvas, alternate)
-  self.canvas:clear(255, 255, 255, self.ambient)
+  self.canvas:clear(self.ambient, self.ambient, self.ambient)
   
   for light in self.lights:iterate() do
     if light.alpha > 0 then
