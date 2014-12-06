@@ -1,6 +1,6 @@
-Floor = class("Floor", Entity)
+Walls = class("Walls", Entity)
 
-function Floor:initialize(xml, width, height)
+function Walls:initialize(xml, width, height)
   Entity.initialize(self)
   self.layer = 1
   self.width = width
@@ -10,12 +10,12 @@ function Floor:initialize(xml, width, height)
   self.xml = xml
 end
 
-function Floor:added()
+function Walls:added()
   if self.xml then self:setupFromXML(self.xml) end
 end
 
-function Floor:setupFromXML(xml)
-  local elem = findChild(xml, "floor")
+function Walls:setupFromXML(xml)
+  local elem = findChild(xml, "walls")
   
   for _, v in ipairs(findChildren(elem, "tile")) do
     self.map:set(tonumber(v.attr.x), tonumber(v.attr.y), tonumber(v.attr.id) + 1)
@@ -39,6 +39,6 @@ function Floor:setupFromXML(xml)
   end
 end
 
-function Floor:draw()
+function Walls:draw()
   self.map:draw(self.x, self.y)
 end

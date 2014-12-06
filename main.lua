@@ -1,4 +1,5 @@
 require("lib.ammo")
+require("lib.physics")
 require("lib.assets")
 require("lib.input")
 require("lib.tweens")

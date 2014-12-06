@@ -23,8 +23,8 @@
   
   <layers>
     <tiles name="collision" gridSize="9" gridColor="AAFFFFFF" exportTileIDs="true" />
-    <tiles name="walls" gridSize="9" gridColor="AAFFFFFF" exportTileIDs="true" />
     <tiles name="floor" gridSize="9" gridColor="AAFFFFFF" exportTileIDs="true" />
+    <tiles name="walls" gridSize="9" gridColor="AAFFFFFF" exportTileIDs="true" />
     <objects name="objects" gridSize="1" drawGridSize="9" gridColor="AAFFFFFF" />
     <objects name="tiledObjects" gridSize="9" gridColor="AAFFFFFF" />
   </layers>

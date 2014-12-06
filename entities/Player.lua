@@ -10,8 +10,8 @@ Player.static.weapons = {
 
 function Player.static:fromXML(e)
   return Player:new(
-    tonumber(e.attr.x),
-    tonumber(e.attr.y)
+    tonumber(e.attr.x) + Player.width / 2,
+    tonumber(e.attr.y) + Player.height / 2
   )
 end
 

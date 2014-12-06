@@ -1,4 +1,4 @@
-Level = class("Level", World)
+Level = class("Level", PhysicalWorld)
 Level.static.list = { "1" }
 
 function Level:initialize(index)
@@ -19,7 +19,6 @@ function Level:initialize(index)
     [10] = 1 -- walls
   }
   
-  --self:setGravity(0, 500)
 end
 
 function Level:loadObjects()
