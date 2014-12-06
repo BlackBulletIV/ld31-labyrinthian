@@ -1,0 +1,21 @@
+<level>
+  <width>405</width>
+  <height>306</height>
+  <collision set="tiles">
+    <rect id="0" x="0" y="135" w="405" h="27"/>
+    <rect id="0" x="288" y="198" w="117" h="18"/>
+    <rect id="0" x="0" y="279" w="405" h="27"/>
+    <rect id="0" x="0" y="216" w="18" h="63"/>
+    <rect id="0" x="0" y="198" w="243" h="18"/>
+  </collision>
+  <floor set="tiles">
+    <rect id="0" x="0" y="279" w="405" h="27"/>
+    <rect id="0" x="0" y="216" w="18" h="63"/>
+    <rect id="0" x="0" y="198" w="243" h="18"/>
+    <rect id="0" x="288" y="198" w="117" h="18"/>
+    <rect id="0" x="0" y="135" w="405" h="27"/>
+  </floor>
+  <objects>
+    <player x="26" y="263"/>
+  </objects>
+</level>
