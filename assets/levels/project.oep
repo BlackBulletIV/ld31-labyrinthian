@@ -1,0 +1,43 @@
+<project>
+  <name>Ludum Dare 27</name>
+  
+  <settings>
+    <defaultWidth>396</defaultWidth>
+    <defaultHeight>306</defaultHeight>
+    <minWidth>396</minWidth>
+    <minHeight>306</minHeight>
+    <maxWidth>25600</maxWidth>
+    <maxHeight>25600</maxHeight>
+    <bgColor>0x444444</bgColor>
+    <workingDirectory>../images</workingDirectory>
+  </settings>
+  
+  <tilesets>
+    <tileset name="tiles" image="tiles.png" tileWidth="9" tileHeight="9" paletteScale="2" />
+    <tileset name="collision" image="collision.png" tileWidth="9" tileHeight="9" paletteScale="2" />
+  </tilesets>
+  
+  <objects>
+    <object name="player" image="player-ps.png" width="7" height="9" imageOffsetX="6" imageWidth="7" imageHeight="9" limit="3">
+      <values>
+        <integer name="type" default="1" />
+      </values>
+    </object>
+    
+    <object name="turret" image="turret-base.png" width="11" height="11">
+      <values>
+        <number name="angle" default="0" />
+      </values>
+    </object>
+    
+    <object name="weakWall" image="editor.png" width="9" height="9" resizableX="true" resizableY="true" imageWidth="9" imageHeight="9" tile="true" />
+  </objects>
+  
+  <layers>
+    <tiles name="collision" gridSize="9" gridColor="33FFFFFF" exportTileIDs="true" />
+    <tiles name="floor" gridSize="9" gridColor="33FFFFFF" exportTileIDs="true" />
+    <tiles name="walls" gridSize="9" gridColor="33FFFFFF" exportTileIDs="true" />
+    <objects name="objects" gridSize="1" drawGridSize="9" gridColor="33FFFFFF" />
+    <objects name="tiledObjects" gridSize="9" gridColor="33FFFFFF" />
+  </layers>
+</project>
