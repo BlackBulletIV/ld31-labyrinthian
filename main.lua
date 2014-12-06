@@ -16,7 +16,7 @@ require("entities.CollisionRect")
 require("worlds.Level")
 
 TILE_SIZE = 9
-GRAVITY = 900
+GRAVITY = 950
 FRICTION = 50
 
 function love.load()
@@ -30,6 +30,7 @@ function love.load()
   input.define("right", "d", "right")
   input.define("jump", "w", "up", " ")
   input.define{"fire", mouse = "l"}
+  input.define("flip", "f")
   input.define("quit", "escape")
   
   postfx.init()

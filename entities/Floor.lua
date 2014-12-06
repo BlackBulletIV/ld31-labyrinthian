@@ -35,7 +35,7 @@ function Floor:setupFromXML(xml)
   
   for _, v in ipairs(findChildren(elem, "rect")) do
     local w, h = tonumber(v.attr.w), tonumber(v.attr.h)
-    self.world:add(CollisionRect:new(tonumber(v.attr.x) + w / 2, tonumber(v.attr.y) + h / 2, w, h))
+    self.world:add(CollisionRect:new(tonumber(v.attr.x), tonumber(v.attr.y), w, h))
   end
 end
 

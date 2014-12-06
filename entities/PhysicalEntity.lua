@@ -19,12 +19,12 @@ function PhysicalEntity:removed()
 end
 
 function PhysicalEntity:update(dt)
-  self.inAir = self:collide(self.x, self.y + 1)
+  if self.type == "static" then return end
+  self.inAir = not self:collide(self.x, self.y + math.sign(self.gravityMult))
   if self.inAir then self.vely = self.vely + GRAVITY * self.gravityMult * dt end
   
   self.velx = self.velx * FRICTION * dt
   self:moveBy(self.velx * dt, self.vely * dt)
-  --print(self.velx * dt, self.vely * dt)
 end
 
 function PhysicalEntity:collide(x, y, type)
@@ -34,23 +34,26 @@ function PhysicalEntity:collide(x, y, type)
   
   for e in self.world._physicalEntities:iterate() do
     if e ~= self and (type == "all" or type == e.type)
-    and x + self.width / 2 > e.x - self.width / 2
-    and y + self.height / 2 > e.y - self.height / 2
-    and x - self.width / 2 < e.x + self.width / 2
-    and y - self.height / 2 < e.y + self.height / 2
+    and x + self.width > e.x
+    and y + self.height > e.y
+    and x < e.x + e.width
+    and y < e.y + e.height
     then
       return e
     end
   end
+  
+  return false
 end
 
-function PhysicalEntity:moveBy(x, y, type)
+function PhysicalEntity:moveBy(x, y, type, precision)
   type = type or "static"
-  
+  precision = precision or 2
+    
   if x ~= 0 then
     if self:collide(self.x + x, self.y, type) then
       for e in self.world._physicalEntities:iterate() do
-        local sign = math.sign(x)
+        local sign = math.sign(x) / precision
         
         while x ~= 0 do
           entity = self:collide(self.x + sign, self.y, type)
@@ -72,7 +75,7 @@ function PhysicalEntity:moveBy(x, y, type)
   if y ~= 0 then
     if self:collide(self.x, self.y + y, type) then
       for e in self.world._physicalEntities:iterate() do
-        local sign = math.sign(y)
+        local sign = math.sign(y) / precision
         
         while y ~= 0 do
           entity = self:collide(self.x, self.y + sign, type)
@@ -90,16 +93,17 @@ function PhysicalEntity:moveBy(x, y, type)
       self.y = self.y + y
     end
   end
+  
+  --self.x = math.round(self.x)
+  --self.y = math.round(self.y)
 end
 
 function PhysicalEntity:collideX(entity)
-  print(entity.id, "x", love.timer.getDelta())
   self.velx = 0
   return true
 end
 
 function PhysicalEntity:collideY(entity)
-  print(entity.id, "y", love.timer.getDelta())
   self.vely = 0
   return true
 end

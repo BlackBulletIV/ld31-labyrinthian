@@ -8,8 +8,8 @@ function Entity:drawImage(image, x, y)
     y or self.y,
     self.angle,
     self.scaleX or self.scale or 1,
-    self.scaleY or self.scale or 1,
-    image:getWidth() / 2,
-    image:getHeight() / 2
+    self.scaleY or self.scale or 1
+    --image:getWidth() / 2,
+    --image:getHeight() / 2
   )
 end

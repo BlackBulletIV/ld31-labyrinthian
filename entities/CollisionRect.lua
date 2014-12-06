@@ -6,6 +6,6 @@ function CollisionRect:initialize(x, y, width, height)
 end
 
 function CollisionRect:draw()
-  love.graphics.setColor(255, 0, 0)
-  love.graphics.rectangle("fill", self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
+  --love.graphics.setColor(255, 0, 0)
+  --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
