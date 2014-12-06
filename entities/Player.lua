@@ -1,5 +1,5 @@
 Player = class("Player", PhysicalEntity)
-Player.static.width = 9
+Player.static.width = 8
 Player.static.height = 12
 
 Player.static.weapons = {
@@ -22,10 +22,12 @@ function Player:initialize(x, y)
   self.height = Player.height
   self.image = assets.images.player
   self.speed = 1800
-  self.health = 2
+  self.health = 10
   self.weapon = "pistol"
   self.weaponTimer = 0
   self.torch = lighting:addBeam(x, y, 0, 280, math.tau / 20, 30, 1)
+  self.torchOn = true
+  
   self.flash = lighting:addLight(x, y, 200, 100, 1)
   self.flash.alpha = 0
   self.flashTime = 0.06
@@ -48,11 +50,18 @@ function Player:update(dt)
   if dir then self:applyForce(self.speed * math.cos(dir), self.speed * math.sin(dir)) end
   if input.pressed("fire") then self:fireWeapon() end
   
-  self.torch.x = self.x
-  self.torch.y = self.y
-  self.torch.alpha = math.clamp(self.torch.alpha + math.random(0, 255) * dt * (math.random(0, 1) == 1 and 1 or -1), 200, 255)
-  self.torch.angle = self.angle
+  if input.pressed("torch") then
+    self.torchOn = not self.torchOn
+    self.torch.alpha = self.torchOn and 255 or 0
+  end
   
+  if self.torchOn then
+    self.torch.x = self.x + 8 * math.cos(self.angle) -- offset to torch on image
+    self.torch.y = self.y + 8 * math.sin(self.angle)
+    self.torch.angle = self.angle
+    self.torch.alpha = math.clamp(self.torch.alpha + math.random(0, 320) * dt * (math.random(0, 1) == 1 and 1 or -1), 200, 255)
+  end
+    
   if self.weaponTimer > 0 then self.weaponTimer = self.weaponTimer - dt end
   if self.flashTimer > 0 then
     self.flashTimer = self.flashTimer - dt
@@ -61,12 +70,23 @@ function Player:update(dt)
 end
 
 function Player:draw()
-  self:drawImage()
+  self:drawImage(self.image, self.x, self.y, self.width / 2, self.height / 2)
+  
+  if self.flashTimer > 0 then
+    love.graphics.draw(
+      assets.images.muzzleFlash,
+      self.x + 13 * math.cos(self.angle) + 3 * math.cos(self.angle + math.tau / 2),
+      self.y + 13 * math.sin(self.angle) + 3 * math.sin(self.angle + math.tau / 2),
+      self.angle
+    )
+  end 
 end
 
 function Player:fireWeapon()
   if self.weaponTimer <= 0 then
-    self.world:add(Bullet:new(self.x, self.y, math.angle(self.x, self.y, getMouse())))
+    local x = self.x + 8 * math.cos(self.angle)-- + 2 * math.cos(self.angle + math.tau / 4) -- offsets to gun on image
+    local y = self.y + 8 * math.sin(self.angle)-- + 2 * math.sin(self.angle + math.tau / 4)
+    self.world:add(Bullet:new(x, y, math.angle(self.x, self.y, getMouse())))
     self.weaponTimer = 1 / Player.weapons[self.weapon].rate
     self.flashTimer = self.flashTime
     self.flash.alpha = math.random(180, 255)

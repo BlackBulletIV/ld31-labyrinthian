@@ -20,5 +20,13 @@
   </walls>
   <objects>
     <player x="134" y="241"/>
+    <mauler x="256" y="174">
+      <node x="235" y="183"/>
+      <node x="170" y="178"/>
+      <node x="67" y="188"/>
+      <node x="191" y="185"/>
+      <node x="355" y="183"/>
+      <node x="289" y="175"/>
+    </mauler>
   </objects>
 </level>

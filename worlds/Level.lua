@@ -16,6 +16,7 @@ function Level:initialize(index)
   self:setupLayers{
     [1] = { 1, pre = postfx.exclude, post = postfx.include }, -- walls
     [3] = 1, -- player
+    [4] = 1, -- enemies
     [5] = 1, -- projectiles
     [10] = 1 -- floor
   }
@@ -25,6 +26,10 @@ function Level:loadObjects()
   local o = findChild(self.xml, "objects")
   self.player = Player:fromXML(findChild(o, "player"))
   self:add(self.player)
+  
+  for _, v in ipairs(findChildren(o, "mauler")) do
+    self:add(Mauler:fromXML(v))
+  end
   
   for _, v in ipairs(findChildren(o, "circleLight")) do
     local light = lighting:addLight(

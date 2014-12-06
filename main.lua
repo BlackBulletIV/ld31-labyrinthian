@@ -11,6 +11,8 @@ require("misc.utils")
 require("misc.lighting")
 
 require("entities.Player")
+require("entities.Enemy")
+require("entities.Mauler")
 require("entities.Walls")
 require("entities.Floor")
 require("entities.Bullet")
@@ -24,7 +26,9 @@ function love.load()
   
   assets.loadImage("tiles.png")
   assets.loadImage("player.png")
+  assets.loadImage("mauler.png")
   assets.loadImage("bullet.png")
+  assets.loadImage("muzzle-flash.png", "muzzleFlash")
   for _, v in pairs(assets.images) do v:setFilter("nearest", "nearest") end
   
   input.define("left", "a", "left")
@@ -32,6 +36,7 @@ function love.load()
   input.define("up", "w", "up")
   input.define("down", "s", "down")
   input.define{"fire", mouse = "l"}
+  input.define("torch", "f")
   input.define("quit", "escape")
   
   postfx.init()

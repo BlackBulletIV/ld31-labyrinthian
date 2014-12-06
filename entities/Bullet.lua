@@ -1,6 +1,6 @@
 Bullet = class("Bullet", PhysicalEntity)
-Bullet.width = 10
-Bullet.height = 1
+Bullet.static.width = 10
+Bullet.static.height = 1
 
 function Bullet:initialize(x, y, angle)
   PhysicalEntity.initialize(self, x, y, "dynamic")
@@ -11,7 +11,7 @@ function Bullet:initialize(x, y, angle)
   self.velx = math.cos(angle) * self.speed
   self.vely = math.sin(angle) * self.speed
   self.image = assets.images.bullet
-  self.damage = 3
+  self.damage = 10
   self.layer = 5
 end
 
@@ -31,8 +31,7 @@ end
 function Bullet:collided(other, fixture, otherFixture, contact)
   if self.dead then return end
   self:die()
-  print(other)
-  -- damage enemy
+  if instanceOf(Enemy, other) then other:bulletHit(self) end
 end
 
 function Bullet:die()

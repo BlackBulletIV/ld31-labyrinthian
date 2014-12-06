@@ -18,7 +18,11 @@
   </tilesets>
   
   <objects>
-    <object name="player" image="player.png" width="9" height="14" imageWidth="9" imageHeight="14" limit="1" />
+    <object name="player" image="player.png" width="16" height="12" imageWidth="16" imageHeight="12" limit="1" />
+    
+    <object name="mauler" image="mauler.png" width="17" height="18">
+      <nodes drawObjects="false" lineMode="1" />
+    </object>
     
     <object name="circleLight" image="editor.png" width="9" height="9" imageWidth="9" imageHeight="9">
       <values>
