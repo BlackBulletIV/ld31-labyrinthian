@@ -1,6 +1,6 @@
 Player = class("Player", PhysicalEntity)
 Player.static.width = 9
-Player.static.height = 14
+Player.static.height = 12
 
 Player.static.weapons = {
   pistol = {
