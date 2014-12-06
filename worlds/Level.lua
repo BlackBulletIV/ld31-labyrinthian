@@ -25,4 +25,16 @@ function Level:loadObjects()
   local o = findChild(self.xml, "objects")
   self.player = Player:fromXML(findChild(o, "player"))
   self:add(self.player)
+  
+  for _, v in ipairs(findChildren(o, "circleLight")) do
+    local light = lighting:addLight(
+      tonumber(v.attr.x),
+      tonumber(v.attr.y),
+      tonumber(v.attr.radius),
+      tonumber(v.attr.innerRadius),
+      tonumber(v.attr.intensity)  
+    )
+    
+    light.alpha = tonumber(v.attr.alpha)
+  end
 end

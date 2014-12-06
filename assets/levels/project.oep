@@ -19,6 +19,26 @@
   
   <objects>
     <object name="player" image="player.png" width="9" height="14" imageWidth="9" imageHeight="14" limit="1" />
+    
+    <object name="circleLight" image="editor.png" width="9" height="9" imageWidth="9" imageHeight="9">
+      <values>
+        <number name="radius" default="50" />
+        <number name="innerRadius" default="0" />
+        <number name="intensity" default="1" />
+        <integer name="alpha" default="255" />
+      </values>
+    </object>
+    
+    <object name="beamLight" image="editor.png" width="9" height="9" imageWidth="9" imageHeight="9" imageOffsetX="9">
+      <values>
+        <number name="range" default="250" />
+        <number name="spread" default="3" />
+        <number name="angle" default="0" />
+        <number name="innerRadius" default="20" />
+        <number name="intensity" default="1" />
+        <integer name="alpha" default="255" />
+      </values>
+    </object>
   </objects>
   
   <layers>

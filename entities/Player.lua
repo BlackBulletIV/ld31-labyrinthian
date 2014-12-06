@@ -21,10 +21,15 @@ function Player:initialize(x, y)
   self.width = Player.width
   self.height = Player.height
   self.image = assets.images.player
-  self.speed = 2400
+  self.speed = 1800
   self.health = 2
   self.weapon = "pistol"
   self.weaponTimer = 0
+  self.torch = lighting:addBeam(x, y, 0, 280, math.tau / 20, 30, 1)
+  self.flash = lighting:addLight(x, y, 200, 100, 1)
+  self.flash.alpha = 0
+  self.flashTime = 0.06
+  self.flashTimer = 0
 end
 
 function Player:added()
@@ -41,10 +46,18 @@ function Player:update(dt)
   self.angle = math.angle(self.x, self.y, getMouse())
   local dir = self:getDirection()
   if dir then self:applyForce(self.speed * math.cos(dir), self.speed * math.sin(dir)) end
-    
   if input.pressed("fire") then self:fireWeapon() end
   
+  self.torch.x = self.x
+  self.torch.y = self.y
+  self.torch.alpha = math.clamp(self.torch.alpha + math.random(0, 255) * dt * (math.random(0, 1) == 1 and 1 or -1), 200, 255)
+  self.torch.angle = self.angle
+  
   if self.weaponTimer > 0 then self.weaponTimer = self.weaponTimer - dt end
+  if self.flashTimer > 0 then
+    self.flashTimer = self.flashTimer - dt
+    if self.flashTimer <= 0 then self.flash.alpha = 0 end
+  end
 end
 
 function Player:draw()
@@ -55,6 +68,10 @@ function Player:fireWeapon()
   if self.weaponTimer <= 0 then
     self.world:add(Bullet:new(self.x, self.y, math.angle(self.x, self.y, getMouse())))
     self.weaponTimer = 1 / Player.weapons[self.weapon].rate
+    self.flashTimer = self.flashTime
+    self.flash.alpha = math.random(180, 255)
+    self.flash.x = self.x
+    self.flash.y = self.y
   end
 end
 

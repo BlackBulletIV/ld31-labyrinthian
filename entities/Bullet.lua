@@ -1,5 +1,5 @@
 Bullet = class("Bullet", PhysicalEntity)
-Bullet.width = 7
+Bullet.width = 10
 Bullet.height = 1
 
 function Bullet:initialize(x, y, angle)
@@ -7,7 +7,7 @@ function Bullet:initialize(x, y, angle)
   self.width = Bullet.width
   self.height = Bullet.height
   self.angle = angle
-  self.speed = 700
+  self.speed = 1000
   self.velx = math.cos(angle) * self.speed
   self.vely = math.sin(angle) * self.speed
   self.image = assets.images.bullet
