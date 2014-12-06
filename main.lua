@@ -16,7 +16,7 @@ require("entities.CollisionRect")
 require("worlds.Level")
 
 TILE_SIZE = 9
-GRAVITY = 950
+GRAVITY = 850
 FRICTION = 50
 
 function love.load()
