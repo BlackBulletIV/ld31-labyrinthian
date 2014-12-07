@@ -20,7 +20,7 @@ function Bullet:added()
   self:setBullet(true)
   self.fixture = self:addShape(love.physics.newRectangleShape(self.width, self.height))
   self.fixture:setCategory(5)
-  self.fixture:setMask(2, 5)
+  self.fixture:setMask(2, 5, 6)
   self.fixture:setSensor(true)
 end
 

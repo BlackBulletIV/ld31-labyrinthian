@@ -9,6 +9,8 @@ slaxml = require("slaxdom")
 require("misc.xmlUtils")
 require("misc.utils")
 require("misc.lighting")
+require("misc.state")
+require("misc.fade")
 
 require("entities.Player")
 require("entities.Enemy")
@@ -18,6 +20,10 @@ require("entities.Floor")
 require("entities.Bullet")
 require("entities.Crosshair")
 require("entities.TransitionZone")
+require("entities.Pod")
+require("entities.Spider")
+require("entities.Floater")
+require("entities.VaporShot")
 require("worlds.Level")
 
 TILE_SIZE = 9
@@ -27,11 +33,17 @@ function love.load()
   assets.loadShader("lighting-composite.frag", "lightingComposite")
   
   assets.loadImage("crosshair.png")
+  assets.loadImage("particle.png")
   assets.loadImage("tiles.png")
   assets.loadImage("player.png")
+  assets.loadImage("player-death.png", "playerDeath")
   assets.loadImage("mauler.png")
+  assets.loadImage("floater.png")
+  assets.loadImage("pod.png")
+  assets.loadImage("spider.png")
   assets.loadImage("bullet.png")
   assets.loadImage("muzzle-flash.png", "muzzleFlash")
+  assets.loadImage("vapor-shot.png", "vaporShot")
   for _, v in pairs(assets.images) do v:setFilter("nearest", "nearest") end
   
   input.define("left", "a", "left")
@@ -55,6 +67,7 @@ function love.load()
 end
 
 function love.update(dt)
+  fade.update(dt)
   postfx.update(dt)
   ammo.update(dt)
   if input.pressed("quit") then love.event.quit() end
@@ -65,4 +78,5 @@ function love.draw()
   postfx.start()
   ammo.draw()
   postfx.stop()
+  fade.draw()
 end

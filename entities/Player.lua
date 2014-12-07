@@ -26,13 +26,16 @@ function Player:initialize(x, y)
   self.weapon = "pistol"
   self.movement = true
   self.weaponTimer = 0
-  self.torch = lighting:addBeam(x, y, 0, 280, math.tau / 20, 30, 1)
+  self.torch = lighting:addBeam(x, y, 0, 280, math.tau / 18, 30, 1)
   self.torchOn = true
   
   self.flash = lighting:addLight(x, y, 200, 100, 1)
   self.flash.alpha = 0
   self.flashTime = 0.06
   self.flashTimer = 0
+  
+  self.deathMap = Spritemap:new(assets.images.playerDeath, 26, 18)
+  self.deathMap:add("death", { 1, 2, 3, 4, 5 }, 12, false)
 end
 
 function Player:added()
@@ -44,6 +47,11 @@ function Player:added()
 end
 
 function Player:update(dt)
+  if self.dead then
+    self.deathMap:update(dt)
+    return
+  end
+  
   PhysicalEntity.update(self, dt)
   self:setAngularVelocity(0)
   
@@ -74,6 +82,11 @@ function Player:update(dt)
 end
 
 function Player:draw()
+  if self.dead then
+    self.deathMap:draw(self.x, self.y, self.angle, 1, 1, 8, 10)
+    return
+  end
+  
   self:drawImage(self.image, self.x, self.y, self.width / 2, self.height / 2)
   
   if self.flashTimer > 0 then
@@ -98,12 +111,28 @@ function Player:release()
   self.fixture:setSensor(false)
 end
 
+function Player:damage(health)
+  if self.dead then return end
+  self.health = self.health - health
+  if self.health <= 0 then self:die() end
+end
+
 function Player:die()
   if self.dead then return end
   self.dead = true
   self.movement = false
-  -- anim
-  print("ff")
+  self.flash.alpha = 0
+  self.deathMap:play("death")
+  
+  tween(self.torch, 0.35, {
+    x = self.x + 20 * math.cos(self.angle) + 4 * math.cos(self.angle - math.tau / 4),
+    y = self.y + 20 * math.sin(self.angle) + 4 * math.sin(self.angle - math.tau / 4),
+    angle = self.angle - math.tau / 2
+  }, ease.quadOut)
+  
+  delay(0.7, function() fade.out(function()
+    ammo.world = Level:new(ammo.world.index, true)
+  end) end)
 end
 
 function Player:fireWeapon()

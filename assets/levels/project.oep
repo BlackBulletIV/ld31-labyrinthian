@@ -20,7 +20,17 @@
   <objects>
     <object name="player" image="player.png" width="16" height="12" imageWidth="16" imageHeight="12" limit="1" />
     
-    <object name="mauler" image="mauler.png" width="17" height="18">
+    <object name="mauler" image="mauler.png" width="17" height="18" imageWidth="17" imageHeight="18">
+      <nodes drawObjects="false" lineMode="1" />
+    </object>
+    
+    <object name="pod" image="pod.png" width="12" height="12" imageWidth="12" imageHeight="12" imageOffsetX="4" imageOffsetY="4">
+      <values>
+        <integer name="payload" default="5" />
+      </values>
+    </object>
+    
+    <object name="floater" image="floater.png" width="25" height="23" imageWidth="25" imageHeight="23">
       <nodes drawObjects="false" lineMode="1" />
     </object>
     

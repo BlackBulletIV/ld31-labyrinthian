@@ -38,7 +38,9 @@ function TransitionZone:update(dt)
     local angle = math.acos(math.clamp(-(facing * player), -1, 1)) -- the negation of the dot product is a dirty edit - no idea why it needs it
     
     if angle < self.facingRange then
-      ammo.world = Level:new(self.index, self.world.player)
+      state.saveLevel()
+      state.savePlayer()
+      ammo.world = Level:new(self.index)
       self.transitioned = true
     end
   end

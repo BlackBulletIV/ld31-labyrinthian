@@ -27,13 +27,14 @@ function Enemy:initialize(x, y, width, height)
   self.visionRange = 250
   self.visionSpread = math.tau / 3
   self.hearingRange = 50
-  self.fireHearingRange = 150
+  self.fireHearingRange = 250
 end
 
 function Enemy:added()
   self:setupBody()
   self.fixture = self:addShape(love.physics.newRectangleShape(self.width, self.height))
   self.fixture:setCategory(3)
+  self.fixture:setMask(3)
   self:setMass(2)
   self:setLinearDamping(12)
   Enemy.all:push(self)
@@ -65,84 +66,21 @@ function Enemy:update(dt)
   end
   
   if self.alert == 0 then
-    if self.patrolTimer <= 0 then
-      if not self.patrol then
-        self:animate(0.8, { angle = math.random() * math.tau })
-        self.patrolTimer = math.random(self.patrolMin * 10, self.patrolMax * 10) / 10
-      elseif not self.patrolMoving then
-        self.patrolIndex = self.patrolIndex + 2 
-        if self.patrolIndex > #self.patrol then self.patrolIndex = 1 end
-        self.patrolMoving = true
-
-        self:moveTo(self.patrol[self.patrolIndex], self.patrol[self.patrolIndex + 1], function()
-          self.patrolMoving = false
-          self.patrolTimer = math.random(self.patrolMin * 10, self.patrolMax * 10) / 10
-        end)
-      end
-    else
-      self.patrolTimer = self.patrolTimer - dt
-    end
+    self:handleUnaware(dt)
   elseif self.alert == 1 then
-    
+    self:handleSuspicious(dt)
   elseif self.alert == 2 then
-    if self.searchTimer <= 0 then
-      self.alert = 0
-    else
-      self.searchTimer = self.searchTimer - dt
-    end
-    
-    if not self.movingTo then
-      if self.searchPauseTimer <= 0 then
-        self.searchPerimeter = self.searchPerimeter + self.searchIncrement
-        local collide = true
-        local px, py, angle
-        
-        repeat
-          if self.lastKnownAngle then
-            angle = self.lastKnownAngle - math.tau / 24 + math.random() * (math.tau / 12)
-          else
-            angle = math.random() * math.tau
-          end
-          
-          px = self.x + math.cos(angle) * self.searchPerimeter
-          py = self.y + math.sin(angle) * self.searchPerimeter
-          local newCollide = false
-          
-          self.world:rayCast(self.x, self.y, px, py, function(fixture)
-            local entity = fixture:getUserData()
-            
-            if instanceOf(Walls, entity) then
-              newCollide = true
-              return 0
-            else
-              return 1
-            end
-          end)
-          
-          if newCollide then
-            self.lastKnownAngle = nil
-          else
-            collide = false
-          end
-        until not collide
-        
-        self:moveTo(px, py, self.resetPauseTimer)
-        self.lastKnownAngle = nil
-      else
-        self.searchPauseTimer = self.searchPauseTimer - dt
-      end
-    end 
-  elseif self.alert == 3 and self.movement then
-    local px, py = self.world.player.x, self.world.player.y
-    self.angle = math.angle(self.x, self.y, px, py)
-    self:applyForce(self.alertSpeed * math.cos(self.angle), self.alertSpeed * math.sin(self.angle))
+    self:handleSearching(dt)
+  elseif self.alert == 3 then
+    self:handleAlert(dt)
   end
   
   self:detect()
 end
 
 function Enemy:draw()
-  self:drawImage()
+  --self:drawImage()
+  --do return end
   
   if self.rayTest ~= nil then
     if self.rayTest then
@@ -178,6 +116,87 @@ function Enemy:patrolFromXML(e)
   self.patrolIndex = 1
 end
 
+function Enemy:handleUnaware(dt)
+  if self.patrolTimer <= 0 then
+    if not self.patrol then
+      self:animate(0.8, { angle = math.random() * math.tau })
+      self.patrolTimer = math.random(self.patrolMin * 10, self.patrolMax * 10) / 10
+    elseif not self.patrolMoving then
+      self.patrolIndex = self.patrolIndex + 2 
+      if self.patrolIndex > #self.patrol then self.patrolIndex = 1 end
+      self.patrolMoving = true
+
+      self:moveTo(self.patrol[self.patrolIndex], self.patrol[self.patrolIndex + 1], function()
+        self.patrolMoving = false
+        self.patrolTimer = math.random(self.patrolMin * 10, self.patrolMax * 10) / 10
+      end)
+    end
+  else
+    self.patrolTimer = self.patrolTimer - dt
+  end
+end
+
+function Enemy:handleSuspicious(dt)
+end
+
+function Enemy:handleSearching(dt)
+  if self.searchTimer <= 0 then
+    self.alert = 0
+  else
+    self.searchTimer = self.searchTimer - dt
+  end
+  
+  if not self.movingTo then
+    if self.searchPauseTimer <= 0 then
+      self.searchPerimeter = self.searchPerimeter + self.searchIncrement
+      local collide = true
+      local px, py, angle
+      
+      repeat
+        if self.lastKnownAngle then
+          angle = self.lastKnownAngle - math.tau / 24 + math.random() * (math.tau / 12)
+        else
+          angle = math.random() * math.tau
+        end
+        
+        px = self.x + math.cos(angle) * self.searchPerimeter
+        py = self.y + math.sin(angle) * self.searchPerimeter
+        local newCollide = false
+        
+        self.world:rayCast(self.x, self.y, px, py, function(fixture)
+          local entity = fixture:getUserData()
+          
+          if instanceOf(Walls, entity) then
+            newCollide = true
+            return 0
+          else
+            return 1
+          end
+        end)
+        
+        if newCollide then
+          self.lastKnownAngle = nil
+        else
+          collide = false
+        end
+      until not collide
+      
+      self:moveTo(px, py, self.resetPauseTimer)
+      self.lastKnownAngle = nil
+    else
+      self.searchPauseTimer = self.searchPauseTimer - dt
+    end
+  end
+end
+
+function Enemy:handleAlert(dt)
+  if self.movement then
+    local px, py = self.world.player.x, self.world.player.y
+    self.angle = math.angle(self.x, self.y, px, py)
+    self:applyForce(self.alertSpeed * math.cos(self.angle), self.alertSpeed * math.sin(self.angle))
+  end
+end
+
 function Enemy:detect()
   local player = self.world.player
   
@@ -195,7 +214,9 @@ function Enemy:detect()
     local angle = math.acos(math.clamp(facing * diff, -1, 1))
     
     if angle <= self.visionSpread / 2 then
-      self.world:rayCast(self.x, self.y, player.x, player.y, function(fixture)
+      local correction = 15
+      
+      self.world:rayCast(self.x - correction * math.cos(self.angle), self.y - correction * math.sin(self.angle), player.x, player.y, function(fixture)
         local entity = fixture:getUserData()
         
         if instanceOf(Walls, entity) then

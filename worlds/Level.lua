@@ -1,12 +1,13 @@
 Level = class("Level", PhysicalWorld)
 Level.static.list = { "1", "2" }
 
-function Level:initialize(index, player)
+function Level:initialize(index, death)
   PhysicalWorld.initialize(self)
-  print(index)
   lighting:clear()
-  
+  if death then fade.into() end
+
   local xmlFile = love.filesystem.read("assets/levels/" .. Level.list[index] .. ".oel")
+  self.index = index
   self.xml = slaxml:dom(xmlFile).root
   self.width = getText(self.xml, "width")
   self.height = getText(self.xml, "height")
@@ -16,8 +17,21 @@ function Level:initialize(index, player)
   self.crosshair = Crosshair:new()
   self:add(self.walls, self.floor, self.crosshair)
   
-  self.prevPlayer = player
-  self:loadObjects()  
+  if death and state.entrance then
+    self.player = Player:new(state.entrance:unpack())
+  elseif state.player then
+    self.player = state.createPlayer()
+  else
+    self.player = Player:fromXML(findChild(findChild(self.xml, "objects"), "player"))
+  end
+  
+  self:add(self.player)
+  
+  if state[index] then
+    state.loadObjects(self)
+  else
+    self:loadObjects()
+  end
   
   self:setupLayers{
     [1] = { 1, pre = postfx.exclude, post = postfx.include }, -- walls
@@ -27,29 +41,24 @@ function Level:initialize(index, player)
     [5] = 1, -- projectiles
     [10] = 1 -- floor
   }
+  
+  state.saveEntrance(self)
 end
 
-function Level:loadObjects()
-  local o = findChild(self.xml, "objects")
-  
-  if self.prevPlayer then
-    local pp = self.prevPlayer
-    self.player = Player:new(pp.x, pp.y)
-    self.player.angle = pp.angle
-    self.player.velx = pp.velx
-    self.player.vely = pp.vely
-    self.player.torchOn = pp.torchOn
-    self.player.torch.alpha = pp.torch.alpha
-    self.player.torch.angle = pp.torch.angle
-  else
-    self.player = Player:fromXML(findChild(o, "player"))
-  end
-  
-  self:add(self.player)
+function Level:loadObjects(death)
+  local o = findChild(self.xml, "objects")  
   if not o then return end
   
   for _, v in ipairs(findChildren(o, "mauler")) do
     self:add(Mauler:fromXML(v))
+  end
+  
+  for _, v in ipairs(findChildren(o, "floater")) do
+    self:add(Floater:fromXML(v))
+  end
+  
+  for _, v in ipairs(findChildren(o, "pod")) do
+    self:add(Pod:fromXML(v))
   end
   
   for _, v in ipairs(findChildren(o, "transitionZone")) do

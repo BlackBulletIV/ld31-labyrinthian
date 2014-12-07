@@ -1,0 +1,35 @@
+fade = {}
+fade.alpha = 0
+fade.defaultTime = 0.5
+
+local function doFade(time, complete, completeArgs, alpha)
+  -- make time an optional argument
+  if type(time) == "function" then
+    completeArgs = complete
+    complete = time
+    time = nil
+  end
+  
+  fade.tween = AttrTween:new(fade, time or fade.defaultTime, { alpha = alpha }, nil, complete, completeArgs)
+  fade.tween:start()
+end
+
+function fade.update(dt)
+  if fade.tween and fade.tween.active then fade.tween:update(dt) end
+end
+
+function fade.draw()
+  if fade.alpha == 0 then return end
+  love.graphics.storeColor()
+  love.graphics.setColor(0, 0, 0, fade.alpha)
+  love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+  love.graphics.resetColor()
+end
+
+function fade.out(time, complete, completeArgs)
+  doFade(time, complete, completeArgs, 255)
+end
+
+function fade.into(time, complete, completeArgs)
+  doFade(time, complete, completeArgs, 0)
+end
