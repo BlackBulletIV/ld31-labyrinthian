@@ -16,6 +16,8 @@ require("entities.Mauler")
 require("entities.Walls")
 require("entities.Floor")
 require("entities.Bullet")
+require("entities.Crosshair")
+require("entities.TransitionZone")
 require("worlds.Level")
 
 TILE_SIZE = 9
@@ -24,6 +26,7 @@ function love.load()
   assets.loadFont("uni05.ttf", { 24, 16, 8 }, "main")
   assets.loadShader("lighting-composite.frag", "lightingComposite")
   
+  assets.loadImage("crosshair.png")
   assets.loadImage("tiles.png")
   assets.loadImage("player.png")
   assets.loadImage("mauler.png")
@@ -45,6 +48,8 @@ function love.load()
   postfx.add(lighting)
   love.graphics.width = love.graphics.width / 2
   love.graphics.height = love.graphics.height / 2
+  love.mouse.setVisible(false)
+  love.mouse.setGrabbed(true)
   
   ammo.world = Level:new(1)
 end

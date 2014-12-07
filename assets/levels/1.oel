@@ -1,22 +1,38 @@
 <level>
   <width>405</width>
   <height>306</height>
-  <collision set="tiles">
-    <rect id="0" x="0" y="135" w="405" h="27"/>
+  <collision set="collision">
     <rect id="0" x="288" y="198" w="117" h="18"/>
     <rect id="0" x="0" y="279" w="405" h="27"/>
     <rect id="0" x="0" y="216" w="18" h="63"/>
+    <rect id="0" x="0" y="135" w="270" h="27"/>
+    <rect id="0" x="297" y="135" w="108" h="27"/>
+    <rect id="0" x="387" y="90" w="18" h="45"/>
+    <rect id="0" x="297" y="0" w="108" h="90"/>
+    <rect id="0" x="243" y="0" w="54" h="18"/>
+    <rect id="0" x="0" y="0" w="243" h="90"/>
+    <rect id="0" x="0" y="90" w="18" h="45"/>
+    <rect id="0" x="0" y="162" w="36" h="36"/>
     <rect id="0" x="0" y="198" w="243" h="18"/>
+    <rect id="0" x="369" y="216" w="36" h="63"/>
   </collision>
   <floor set="tiles">
     <rect id="0" x="0" y="0" w="405" h="306"/>
   </floor>
   <walls set="tiles">
-    <rect id="0" x="0" y="279" w="405" h="27"/>
     <rect id="0" x="0" y="216" w="18" h="63"/>
     <rect id="0" x="0" y="198" w="243" h="18"/>
     <rect id="0" x="288" y="198" w="117" h="18"/>
-    <rect id="0" x="0" y="135" w="405" h="27"/>
+    <rect id="0" x="0" y="135" w="36" h="63"/>
+    <rect id="0" x="36" y="135" w="234" h="27"/>
+    <rect id="0" x="297" y="135" w="108" h="27"/>
+    <rect id="0" x="297" y="0" w="108" h="90"/>
+    <rect id="0" x="0" y="0" w="243" h="90"/>
+    <rect id="0" x="243" y="0" w="54" h="18"/>
+    <rect id="0" x="387" y="90" w="18" h="45"/>
+    <rect id="0" x="0" y="90" w="18" h="45"/>
+    <rect id="0" x="369" y="216" w="36" h="63"/>
+    <rect id="0" x="0" y="279" w="405" h="27"/>
   </walls>
   <objects>
     <player x="134" y="241"/>
@@ -28,5 +44,6 @@
       <node x="355" y="183"/>
       <node x="289" y="175"/>
     </mauler>
+    <transitionZone x="243" y="18" width="54" height="37" index="2" facing="90"/>
   </objects>
 </level>

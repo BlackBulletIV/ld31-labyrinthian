@@ -24,6 +24,13 @@
       <nodes drawObjects="false" lineMode="1" />
     </object>
     
+    <object name="transitionZone" image="editor.png" width="9" height="9" imageWidth="9" imageHeight="9" imageOffsetX="18" resizableX="true" resizableY="true">
+      <values>
+        <integer name="index" />
+        <number name="facing" default="90" />
+      </values>
+    </object>
+    
     <object name="circleLight" image="editor.png" width="9" height="9" imageWidth="9" imageHeight="9">
       <values>
         <number name="radius" default="50" />

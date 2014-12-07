@@ -24,6 +24,7 @@ function Player:initialize(x, y)
   self.speed = 1800
   self.health = 10
   self.weapon = "pistol"
+  self.movement = true
   self.weaponTimer = 0
   self.torch = lighting:addBeam(x, y, 0, 280, math.tau / 20, 30, 1)
   self.torchOn = true
@@ -45,10 +46,13 @@ end
 function Player:update(dt)
   PhysicalEntity.update(self, dt)
   self:setAngularVelocity(0)
-  self.angle = math.angle(self.x, self.y, getMouse())
-  local dir = self:getDirection()
-  if dir then self:applyForce(self.speed * math.cos(dir), self.speed * math.sin(dir)) end
-  if input.pressed("fire") then self:fireWeapon() end
+  
+  if self.movement then
+    self.angle = math.angle(self.x, self.y, getMouse())
+    local dir = self:getDirection()
+    if dir then self:applyForce(self.speed * math.cos(dir), self.speed * math.sin(dir)) end
+    if input.pressed("fire") then self:fireWeapon() end
+  end
   
   if input.pressed("torch") then
     self.torchOn = not self.torchOn
@@ -80,6 +84,26 @@ function Player:draw()
       self.angle
     )
   end 
+end
+
+function Player:hold()
+  self.movement = false
+  self.velx = 0
+  self.vely = 0
+  self.fixture:setSensor(true)
+end
+
+function Player:release()
+  self.movement = true
+  self.fixture:setSensor(false)
+end
+
+function Player:die()
+  if self.dead then return end
+  self.dead = true
+  self.movement = false
+  -- anim
+  print("ff")
 end
 
 function Player:fireWeapon()

@@ -1,8 +1,11 @@
 Level = class("Level", PhysicalWorld)
-Level.static.list = { "1" }
+Level.static.list = { "1", "2" }
 
-function Level:initialize(index)
+function Level:initialize(index, player)
   PhysicalWorld.initialize(self)
+  print(index)
+  lighting:clear()
+  
   local xmlFile = love.filesystem.read("assets/levels/" .. Level.list[index] .. ".oel")
   self.xml = slaxml:dom(xmlFile).root
   self.width = getText(self.xml, "width")
@@ -10,11 +13,15 @@ function Level:initialize(index)
     
   self.walls = Walls:new(self.xml, self.width, self.height)
   self.floor = Floor:new(self.xml, self.width, self.height)
-  self:add(self.walls, self.floor)
+  self.crosshair = Crosshair:new()
+  self:add(self.walls, self.floor, self.crosshair)
+  
+  self.prevPlayer = player
   self:loadObjects()  
   
   self:setupLayers{
     [1] = { 1, pre = postfx.exclude, post = postfx.include }, -- walls
+    [2] = 1, -- crosshair
     [3] = 1, -- player
     [4] = 1, -- enemies
     [5] = 1, -- projectiles
@@ -24,11 +31,29 @@ end
 
 function Level:loadObjects()
   local o = findChild(self.xml, "objects")
-  self.player = Player:fromXML(findChild(o, "player"))
+  
+  if self.prevPlayer then
+    local pp = self.prevPlayer
+    self.player = Player:new(pp.x, pp.y)
+    self.player.angle = pp.angle
+    self.player.velx = pp.velx
+    self.player.vely = pp.vely
+    self.player.torchOn = pp.torchOn
+    self.player.torch.alpha = pp.torch.alpha
+    self.player.torch.angle = pp.torch.angle
+  else
+    self.player = Player:fromXML(findChild(o, "player"))
+  end
+  
   self:add(self.player)
+  if not o then return end
   
   for _, v in ipairs(findChildren(o, "mauler")) do
     self:add(Mauler:fromXML(v))
+  end
+  
+  for _, v in ipairs(findChildren(o, "transitionZone")) do
+    self:add(TransitionZone:fromXML(v))
   end
   
   for _, v in ipairs(findChildren(o, "circleLight")) do

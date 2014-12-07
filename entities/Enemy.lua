@@ -6,6 +6,7 @@ function Enemy:initialize(x, y, width, height)
   self.layer = 4
   self.width = width
   self.height = height
+  self.movement = true
   self.alert = 0 -- 0: unaware, 1: suspicious, 2: searching, 3: engaging
   self.lastKnownPosition = nil
   self.lastKnownAngle = nil
@@ -47,7 +48,7 @@ function Enemy:update(dt)
   PhysicalEntity.update(self, dt)
   self:setAngularVelocity(0)
   
-  if self.movingTo then
+  if self.movingTo and self.movement then
     if self.x > self.movingTo.x - 1 and self.x < self.movingTo.x + 1
     and self.y > self.movingTo.y - 1 and self.y < self.movingTo.y + 1
     then
@@ -131,7 +132,7 @@ function Enemy:update(dt)
         self.searchPauseTimer = self.searchPauseTimer - dt
       end
     end 
-  elseif self.alert == 3 then
+  elseif self.alert == 3 and self.movement then
     local px, py = self.world.player.x, self.world.player.y
     self.angle = math.angle(self.x, self.y, px, py)
     self:applyForce(self.alertSpeed * math.cos(self.angle), self.alertSpeed * math.sin(self.angle))
@@ -142,6 +143,7 @@ end
 
 function Enemy:draw()
   self:drawImage()
+  
   if self.rayTest ~= nil then
     if self.rayTest then
       love.graphics.setColor(0, 255, 0)
@@ -178,6 +180,12 @@ end
 
 function Enemy:detect()
   local player = self.world.player
+  
+  if player.dead then
+    self.alert = 0
+    return
+  end
+  
   local detectedVision = self.visionRange > 0 and (player.torchOn or player.flashTimer > 0)
   local detectedHearing = self.hearingRange > 0
   

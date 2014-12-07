@@ -1,0 +1,29 @@
+<level>
+  <width>405</width>
+  <height>306</height>
+  <collision set="collision">
+    <rect id="0" x="0" y="0" w="243" h="117"/>
+    <rect id="0" x="243" y="0" w="162" h="18"/>
+    <rect id="0" x="297" y="18" w="108" h="99"/>
+    <rect id="0" x="261" y="153" w="144" h="81"/>
+    <rect id="0" x="0" y="279" w="405" h="27"/>
+    <rect id="0" x="0" y="117" w="18" h="162"/>
+    <rect id="0" x="18" y="252" w="216" h="27"/>
+    <rect id="0" x="63" y="234" w="90" h="18"/>
+    <rect id="0" x="99" y="153" w="63" h="45"/>
+  </collision>
+  <floor set="tiles">
+    <rect id="0" x="0" y="0" w="405" h="306"/>
+  </floor>
+  <walls set="tiles">
+    <rect id="0" x="297" y="0" w="108" h="117"/>
+    <rect id="0" x="0" y="0" w="243" h="117"/>
+    <rect id="0" x="99" y="153" w="63" h="45"/>
+    <rect id="0" x="63" y="234" w="90" h="18"/>
+    <rect id="0" x="0" y="117" w="18" h="189"/>
+    <rect id="0" x="18" y="252" w="216" h="54"/>
+    <rect id="0" x="234" y="279" w="171" h="27"/>
+    <rect id="0" x="261" y="153" w="144" h="81"/>
+    <rect id="0" x="243" y="0" w="54" h="18"/>
+  </walls>
+</level>
