@@ -9,8 +9,10 @@ slaxml = require("slaxdom")
 require("misc.xmlUtils")
 require("misc.utils")
 require("misc.lighting")
+require("misc.noise")
 require("misc.state")
 require("misc.fade")
+require("misc.text")
 
 require("entities.Player")
 require("entities.Enemy")
@@ -25,13 +27,16 @@ require("entities.Spider")
 require("entities.Floater")
 require("entities.VaporShot")
 require("entities.Door")
+require("entities.TextZone")
+require("entities.Decals")
 require("worlds.Level")
 
 TILE_SIZE = 9
 
 function love.load()
-  assets.loadFont("uni05.ttf", { 24, 16, 8 }, "main")
+  assets.loadFont("uni05.ttf", { 24, 16 }, "main")
   assets.loadShader("lighting-composite.frag", "lightingComposite")
+  assets.loadShader("noise.frag")
   
   assets.loadImage("crosshair.png")
   assets.loadImage("particle.png")
@@ -67,8 +72,12 @@ function love.load()
   assets.loadSfx("floater-death2.ogg", "floaterDeath2")
   assets.loadSfx("floater-shoot1.ogg", "floaterShoot1")
   assets.loadSfx("floater-shoot2.ogg", "floaterShoot2")
+  assets.loadSfx("floater-shoot3.ogg", "floaterShoot3")
   assets.loadSfx("pod-burst1.ogg", "podBurst1")
   assets.loadSfx("pod-burst2.ogg", "podBurst2")
+  assets.loadSfx("spider-death1.ogg", "spiderDeath1")
+  assets.loadSfx("spider-death2.ogg", "spiderDeath2")
+  assets.loadSfx("torch.ogg")
   
   input.define("left", "a", "left")
   input.define("right", "d", "right")
@@ -78,22 +87,38 @@ function love.load()
   input.define("torch", "f")
   input.define("quit", "escape")
   
+  input.define("pause", "p")
+  input.define("prev", "-")
+  input.define("next", "=")
+  
   postfx.init()
   postfx.scale = 2
   lighting:init()
   postfx.add(lighting)
+  postfx.add(noise)
+  
   love.graphics.width = love.graphics.width / 2
   love.graphics.height = love.graphics.height / 2
   love.mouse.setVisible(false)
   love.mouse.setGrabbed(true)
+  
   bgSfx = assets.sfx.bg:loop()
   ammo.world = Level:new(1)
+  paused = false
 end
 
 function love.update(dt)
-  fade.update(dt)
-  postfx.update(dt)
-  ammo.update(dt)
+  if not paused then
+    fade.update(dt)
+    text.update(dt)
+    postfx.update(dt)
+    ammo.update(dt)
+    
+    if input.pressed("prev") then ammo.world = Level:new(ammo.world.index - 1) end
+    if input.pressed("next") then ammo.world = Level:new(ammo.world.index + 1) end
+  end
+  
+  if input.pressed("pause") then paused = not paused end
   if input.pressed("quit") then love.event.quit() end
   input.update()
 end
@@ -102,5 +127,6 @@ function love.draw()
   postfx.start()
   ammo.draw()
   postfx.stop()
+  text.draw()
   fade.draw()
 end

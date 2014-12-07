@@ -1,5 +1,4 @@
 Level = class("Level", PhysicalWorld)
-Level.static.list = { "1", "2" }
 
 function Level:initialize(index, death)
   PhysicalWorld.initialize(self)
@@ -8,7 +7,7 @@ function Level:initialize(index, death)
   love.audio.pause()
   bgSfx:resume()
 
-  local xmlFile = love.filesystem.read("assets/levels/" .. Level.list[index] .. ".oel")
+  local xmlFile = love.filesystem.read("assets/levels/" .. index .. ".oel")
   self.index = index
   self.xml = slaxml:dom(xmlFile).root
   self.width = getText(self.xml, "width")
@@ -16,6 +15,7 @@ function Level:initialize(index, death)
     
   self.walls = Walls:new(self.xml, self.width, self.height)
   self.floor = Floor:new(self.xml, self.width, self.height)
+  self.decals = Decals:new(nil, self.width, self.height)
   self.crosshair = Crosshair:new()
   self:add(self.walls, self.floor, self.crosshair)
   
@@ -33,7 +33,9 @@ function Level:initialize(index, death)
   
   if state[index] then
     state.loadEnemies(self)
+    state.loadDecals(self)
   else
+    self.decals:loadFromXML(self.xml)
     self:loadEnemies(obj)
   end
   
@@ -73,6 +75,10 @@ function Level:loadObjects(o)
   
   for _, v in ipairs(findChildren(o, "transitionZone")) do
     self:add(TransitionZone:fromXML(v))
+  end
+  
+  for _, v in ipairs(findChildren(o, "textZone")) do
+    self:add(TextZone:fromXML(v))
   end
   
   for _, v in ipairs(findChildren(o, "circleLight")) do

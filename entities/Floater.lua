@@ -92,7 +92,7 @@ function Floater:handleAlert(dt)
   if self.fireTimer <= 0 then
     self.world:add(VaporShot:new(self.x, self.y, self.angle))
     self.fireTimer = self.fireTime
-    self:playRandom{"floaterShoot1", "floaterShoot2"}
+    self:playRandom{"floaterShoot1", "floaterShoot2", "floaterShoot3"}
   else
     self.fireTimer = self.fireTimer - dt
   end

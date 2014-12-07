@@ -96,4 +96,5 @@ function Spider:die()
   self.ps:setLinearAcceleration(self:getLinearVelocity())
   self.ps:emit(math.random(10, 15))
   self:destroy()
+  self:playRandom{"spiderDeath1", "spiderDeath2"}
 end

@@ -26,8 +26,10 @@ function Player:initialize(x, y)
   self.weapon = "pistol"
   self.movement = true
   self.weaponTimer = 0
-  self.torch = lighting:addBeam(x, y, 0, 280, math.tau / 18, 30, 1)
+  self.torch = lighting:addBeam(x, y, 0, 280, math.tau / 16, 30, 1)
+  self.torchGlow = lighting:addBeam(x, y, 0, 50, math.tau / 6, 0, 0.9)
   self.torchOn = true
+  self:toggleTorch(false)
   
   self.flash = lighting:addLight(x, y, 200, 100, 1)
   self.flash.alpha = 0
@@ -74,16 +76,18 @@ function Player:update(dt)
     if input.pressed("fire") then self:fireWeapon() end
   end
   
-  if input.pressed("torch") then
-    self.torchOn = not self.torchOn
-    self.torch.alpha = self.torchOn and 255 or 0
-  end
+  if input.pressed("torch") then self:toggleTorch() end
   
   if self.torchOn then
     self.torch.x = self.x + 8 * math.cos(self.angle) -- offset to torch on image
     self.torch.y = self.y + 8 * math.sin(self.angle)
     self.torch.angle = self.angle
     self.torch.alpha = math.clamp(self.torch.alpha + math.random(0, 320) * dt * (math.random(0, 1) == 1 and 1 or -1), 200, 255)
+    
+    self.torchGlow.x = self.x - 4 * math.cos(self.angle)
+    self.torchGlow.y = self.y - 4 * math.sin(self.angle)
+    self.torchGlow.angle = self.angle
+    self.torchGlow.alpha = self.torch.alpha
   end
     
   if self.weaponTimer > 0 then self.weaponTimer = self.weaponTimer - dt end
@@ -130,6 +134,13 @@ function Player:damage(health)
   if self.dead then return end
   self.health = self.health - health
   if self.health <= 0 then self:die() end
+end
+
+function Player:toggleTorch(sound)
+  self.torchOn = not self.torchOn
+  self.torch.alpha = self.torchOn and 255 or 0
+  self.torchGlow.alpha = self.torch.alpha
+  if sound ~= false then playSound("torch") end
 end
 
 function Player:die()

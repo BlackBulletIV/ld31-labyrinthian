@@ -48,7 +48,6 @@ end
 function state.loadEnemies(world)
   local st = state[world.index]
   local o
-  world.decals = st.decals
   
   for _, v in ipairs(st.enemies) do
     if v.type == "Pod" then
@@ -62,6 +61,11 @@ function state.loadEnemies(world)
       world:add(o)
     end
   end
+end
+
+function state.loadDecals(world)
+  local st = state[world.index]
+  world.decals.canvas = st.decals
 end
 
 function state.createPlayer()
