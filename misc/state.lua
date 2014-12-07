@@ -19,12 +19,12 @@ end
 function state.saveLevel()
   local t = {}
   t.decals = ammo.world.decals
-  t.objects = {}
+  t.enemies = {}
   
   for e in ammo.world:iterate() do
     if instanceOf(Enemy, e) then
       if not e.dead then
-        t.objects[#t.objects + 1] = {
+        t.enemies[#t.enemies + 1] = {
           type = e.class.name,
           x = e.x,
           y = e.y,
@@ -32,7 +32,7 @@ function state.saveLevel()
         }
       end
     elseif instanceOf(Pod, e) then
-      t.objects[#t.objects + 1] = {
+      t.enemies[#t.enemies + 1] = {
         type = "Pod",
         x = e.x,
         y = e.y,
@@ -45,12 +45,12 @@ function state.saveLevel()
   state[ammo.world.index] = t
 end
 
-function state.loadObjects(world)
+function state.loadEnemies(world)
   local st = state[world.index]
   local o
   world.decals = st.decals
   
-  for _, v in ipairs(st.objects) do
+  for _, v in ipairs(st.enemies) do
     if v.type == "Pod" then
       o = Pod:new(v.x, v.y)
       o.angle = v.angle

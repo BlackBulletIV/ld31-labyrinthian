@@ -48,6 +48,7 @@ function Pod:burst()
     self.world:add(Spider:new(self.x, self.y, math.tau * math.random()))
   end
   
+  self:playRandom{"podBurst1", "podBurst2"}
   self.map:play("burst")
   self.bursted = true
 end

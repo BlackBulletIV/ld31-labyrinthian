@@ -11,10 +11,13 @@ end
 function Mauler:initialize(x, y)
   Enemy.initialize(self, x, y, Mauler.width, Mauler.height)
   self.speed = 400
-  self.alertSpeed = 1800
+  self.alertSpeed = 1700
   self.health = 80
   self.lungeRange = 50
   self.lungeSpeed = 150
+  self.walkTime = 1 / 2
+  self.runTime = 1 / 5
+  self.walkTimer = 0
   self.map = Spritemap:new(assets.images.mauler, 19, 18)
   self.map:add("walk", { 1, 2, 3, 2, 1, 4, 5, 4 }, 12, true)
   self.map:add("run", { 1, 2, 3, 2, 1, 4, 5, 4 }, 40, true)
@@ -52,12 +55,21 @@ function Mauler:update(dt)
   elseif self.movingTo or self.alert == 3 then
     local anim = self.alert > 0 and "run" or "walk"
     if self.map.current ~= anim then self.map:play(anim) end
+    
+    if self.walkTimer <= 0 then
+      self:playRandom{"maulerStep1", "maulerStep2", "maulerStep3", "maulerStep4"}
+      self.walkTimer = anim == "run" and self.runTime or self.walkTime
+    end
   else
     self.map.frame = self.lungeComplete and 10 or 5
   end
   
   if self.alert == 3 and math.distance(self.x, self.y, self.world.player.x, self.world.player.y) <= self.lungeRange then
     self:lunge(dt)
+  end
+  
+  if self.walkTimer >= 0 then
+    self.walkTimer = self.walkTimer - dt
   end
 end
 
@@ -72,4 +84,8 @@ function Mauler:lunge(dt)
   self.lunging = true
   self.movement = false
   self.map:play("lunge")
+  
+  if not self.lungeSound or not self.lungeSound:isPlaying() then
+    self.lungeSound = self:playSound("maulerLunge")
+  end
 end

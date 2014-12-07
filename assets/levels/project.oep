@@ -34,6 +34,15 @@
       <nodes drawObjects="false" lineMode="1" />
     </object>
     
+    <object name="door" image="editor.png" width="9" height="9" imageWidth="9" imageHeight="9" imageOffsetX="27" resizableX="true" resizableY="true" tile="true">
+      <values>
+        <string name="axis" default="x" />
+        <integer name="direction" default="1" />
+        <number name="moveTime" default="0.3" />
+        <number name="delay" default="0.5" />
+      </values>
+    </object>
+    
     <object name="transitionZone" image="editor.png" width="9" height="9" imageWidth="9" imageHeight="9" imageOffsetX="18" resizableX="true" resizableY="true">
       <values>
         <integer name="index" />

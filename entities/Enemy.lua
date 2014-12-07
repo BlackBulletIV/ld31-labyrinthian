@@ -80,7 +80,7 @@ end
 
 function Enemy:draw()
   --self:drawImage()
-  --do return end
+  do return end
   
   if self.rayTest ~= nil then
     if self.rayTest then

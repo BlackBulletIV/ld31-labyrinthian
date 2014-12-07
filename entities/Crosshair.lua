@@ -3,8 +3,8 @@ Crosshair = class("Crosshair", Entity)
 function Crosshair:initialize()
   Entity.initialize(self)
   self.image = assets.images.crosshair
-  self.layer = 2
-  self.color = { 220, 0, 0 }
+  self.layer = 1
+  self.color = { 200, 20, 20 }
 end
 
 function Crosshair:update(dt)

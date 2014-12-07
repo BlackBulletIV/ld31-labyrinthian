@@ -21,7 +21,7 @@ function Player:initialize(x, y)
   self.width = Player.width
   self.height = Player.height
   self.image = assets.images.player
-  self.speed = 1800
+  self.speed = 1600
   self.health = 10
   self.weapon = "pistol"
   self.movement = true
@@ -33,6 +33,9 @@ function Player:initialize(x, y)
   self.flash.alpha = 0
   self.flashTime = 0.06
   self.flashTimer = 0
+  
+  self.walkTime = 1 / 3
+  self.walkTimer = 0
   
   self.deathMap = Spritemap:new(assets.images.playerDeath, 26, 18)
   self.deathMap:add("death", { 1, 2, 3, 4, 5 }, 12, false)
@@ -58,7 +61,16 @@ function Player:update(dt)
   if self.movement then
     self.angle = math.angle(self.x, self.y, getMouse())
     local dir = self:getDirection()
-    if dir then self:applyForce(self.speed * math.cos(dir), self.speed * math.sin(dir)) end
+    
+    if dir then
+      self:applyForce(self.speed * math.cos(dir), self.speed * math.sin(dir))
+      
+      if self.walkTimer <= 0 then
+        playRandom{"step1", "step2", "step3", "step4"}
+        self.walkTimer = self.walkTime
+      end
+    end
+    
     if input.pressed("fire") then self:fireWeapon() end
   end
   
@@ -75,10 +87,13 @@ function Player:update(dt)
   end
     
   if self.weaponTimer > 0 then self.weaponTimer = self.weaponTimer - dt end
+  
   if self.flashTimer > 0 then
     self.flashTimer = self.flashTimer - dt
     if self.flashTimer <= 0 then self.flash.alpha = 0 end
   end
+  
+  if self.walkTimer > 0 then self.walkTimer = self.walkTimer - dt end
 end
 
 function Player:draw()
@@ -147,6 +162,8 @@ function Player:fireWeapon()
     self.flash.x = self.x
     self.flash.y = self.y
     for e in Enemy.all:iterate() do e:playerFire() end
+    
+    playRandom{"shoot1", "shoot2", "shoot3"}
   end
 end
 

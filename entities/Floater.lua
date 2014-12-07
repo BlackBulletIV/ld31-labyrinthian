@@ -31,6 +31,10 @@ function Floater:initialize(x, y)
   self.ps:setColors(84, 148, 93, 255, 88, 116, 69, 0)
   self.ps:setSizes(2, 1.5)
   self.ps:setSpeed(3, 25)
+  
+  self.idleSound = assets.sfx.floaterIdle:loop()
+  self.alertSound = assets.sfx.floaterAlert:loop()
+  self.alertSound:pause()
 end
 
 function Floater:added()
@@ -48,12 +52,24 @@ function Floater:update(dt)
   end
   
   Enemy.update(self, dt)
+  updateSound(self.idleSound, self.x, self.y)
+  updateSound(self.alertSound, self.x, self.y)
   
   if self.movingTo or self.alert == 3 then
     local anim = self.alert > 0 and "moveAlert" or "move"
     if self.map.current ~= anim then self.map:play(anim) end
+    
+    if not self.alertSound:isPlaying() then
+      self.alertSound:resume()
+      self.idleSound:pause()
+    end
   elseif self.map.current == "idle" then
     self.map:play("idle")
+    
+    if not self.idleSound:isPlaying() then
+      self.idleSound:resume()
+      self.alertSound:pause()
+    end
   end
 end
 
@@ -76,6 +92,7 @@ function Floater:handleAlert(dt)
   if self.fireTimer <= 0 then
     self.world:add(VaporShot:new(self.x, self.y, self.angle))
     self.fireTimer = self.fireTime
+    self:playRandom{"floaterShoot1", "floaterShoot2"}
   else
     self.fireTimer = self.fireTimer - dt
   end
@@ -85,4 +102,7 @@ function Floater:die()
   self.dead = true
   self.map:play("death")
   self.ps:emit(math.random(30, 40))
+  self.idleSound:stop()
+  self.alertSound:stop()
+  self:playRandom{"floaterDeath1", "floaterDeath2"}
 end

@@ -5,6 +5,8 @@ function Level:initialize(index, death)
   PhysicalWorld.initialize(self)
   lighting:clear()
   if death then fade.into() end
+  love.audio.pause()
+  bgSfx:resume()
 
   local xmlFile = love.filesystem.read("assets/levels/" .. Level.list[index] .. ".oel")
   self.index = index
@@ -17,21 +19,26 @@ function Level:initialize(index, death)
   self.crosshair = Crosshair:new()
   self:add(self.walls, self.floor, self.crosshair)
   
+  local obj = findChild(self.xml, "objects")
+  
   if death and state.entrance then
     self.player = Player:new(state.entrance:unpack())
   elseif state.player then
     self.player = state.createPlayer()
   else
-    self.player = Player:fromXML(findChild(findChild(self.xml, "objects"), "player"))
+    self.player = Player:fromXML(findChild(obj, "player"))
   end
   
   self:add(self.player)
   
   if state[index] then
-    state.loadObjects(self)
+    state.loadEnemies(self)
   else
-    self:loadObjects()
+    self:loadEnemies(obj)
   end
+  
+  self:loadObjects(obj)
+  self:loadTiledObjects(self.xml)
   
   self:setupLayers{
     [1] = { 1, pre = postfx.exclude, post = postfx.include }, -- walls
@@ -45,8 +52,7 @@ function Level:initialize(index, death)
   state.saveEntrance(self)
 end
 
-function Level:loadObjects(death)
-  local o = findChild(self.xml, "objects")  
+function Level:loadEnemies(o)
   if not o then return end
   
   for _, v in ipairs(findChildren(o, "mauler")) do
@@ -60,6 +66,10 @@ function Level:loadObjects(death)
   for _, v in ipairs(findChildren(o, "pod")) do
     self:add(Pod:fromXML(v))
   end
+end
+
+function Level:loadObjects(o)
+  if not o then return end
   
   for _, v in ipairs(findChildren(o, "transitionZone")) do
     self:add(TransitionZone:fromXML(v))
@@ -75,5 +85,14 @@ function Level:loadObjects(death)
     )
     
     light.alpha = tonumber(v.attr.alpha)
+  end
+end
+
+function Level:loadTiledObjects(xml)
+  local o = findChild(self.xml, "tiledObjects")
+  if not o then return end
+  
+  for _, v in ipairs(findChildren(o, "door")) do
+    self:add(Door:fromXML(v))
   end
 end
