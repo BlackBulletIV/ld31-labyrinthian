@@ -7,5 +7,5 @@ task :lines do
 end
 
 task :package do
-  puts `zip -r --exclude=*.git* --exclude=*.bfxrlibrary --exclude=*.DS_Store* _bin/triad.love assets entities misc graphics lib worlds *.lua`
+  puts `zip -r --exclude=*.git* --exclude=*.bfxrlibrary --exclude=*.DS_Store* _bin/labyrinthian.love assets entities misc lib worlds *.lua`
 end
