@@ -11,5 +11,6 @@ float rand(vec2 n)
 vec4 effect(vec4 color, Image tex, vec2 tc, vec2 sc)
 {
   float grey = max(rand(tc * factor), clamp);
+  vec4 texColor = Texel(tex, tc);
   return Texel(tex, tc) * vec4(grey, grey, grey, 1) * color;
 }

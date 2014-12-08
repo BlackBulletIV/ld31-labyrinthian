@@ -13,6 +13,7 @@ function Enemy:initialize(x, y, width, height)
   self.patrolMin = 2
   self.patrolMax = 5
   self.patrolTimer = 0
+  self.patrolIndex = 1
   
   self.searchTimer = 0
   self.searchPauseTimer = 0
@@ -27,7 +28,7 @@ function Enemy:initialize(x, y, width, height)
   self.visionRange = 250
   self.visionSpread = math.tau / 3
   self.hearingRange = 50
-  self.fireHearingRange = 250
+  self.fireHearingRange = 200
 end
 
 function Enemy:added()
@@ -97,11 +98,6 @@ end
 function Enemy:moveTo(x, y, complete)
   self.movingTo = Vector(x, y)
   self.movingComplete = complete
-end
-
-function Enemy:setupPatrol(...)
-  self.patrol = { ... }
-  self.patrolIndex = 1
 end
 
 function Enemy:patrolFromXML(e)

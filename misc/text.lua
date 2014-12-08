@@ -10,7 +10,6 @@ function text.update(dt)
   
   if text.timer > 0 then
     text.timer = text.timer - dt
-    print(text.timer)
   elseif text.timer ~= -2 then
     text.timer = -2
     text.fadeOut(function() text.content = nil end)
@@ -22,7 +21,7 @@ function text.draw()
     love.graphics.storeColor()
     love.graphics.setColor(255, 255, 255, text.alpha)
     love.graphics.setFont(assets.fonts.main[16])
-    love.graphics.printf(text.content, love.graphics.width / 16 * 2, love.graphics.height * (2/3) * 2, love.graphics.width * (14/16) * 2, "center")
+    love.graphics.printf(text.content, love.graphics.width / 16 * 2, love.graphics.height * (3/4) * 2, love.graphics.width * (14/16) * 2, "center")
     love.graphics.resetColor()
   end
 end

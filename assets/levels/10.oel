@@ -1,0 +1,97 @@
+<level>
+  <width>405</width>
+  <height>306</height>
+  <collision set="collision">
+    <rect id="0" x="0" y="0" w="180" h="63"/>
+    <rect id="0" x="180" y="0" w="45" h="27"/>
+    <rect id="0" x="225" y="0" w="81" h="63"/>
+    <rect id="0" x="306" y="0" w="45" h="27"/>
+    <rect id="0" x="351" y="0" w="54" h="63"/>
+    <rect id="0" x="387" y="63" w="18" h="225"/>
+    <rect id="0" x="0" y="252" w="126" h="54"/>
+    <rect id="0" x="126" y="288" w="279" h="18"/>
+    <rect id="0" x="0" y="207" w="18" h="45"/>
+    <rect id="0" x="0" y="171" w="126" h="36"/>
+    <rect id="0" x="0" y="63" w="63" h="108"/>
+  </collision>
+  <floor set="tiles">
+    <rect id="5" x="63" y="207" w="18" h="45"/>
+    <rect id="0" x="18" y="207" w="45" h="45"/>
+    <rect id="12" x="171" y="18" w="63" h="54"/>
+    <tile id="20" x="162" y="72"/>
+    <tile id="16" x="162" y="63"/>
+    <rect id="13" x="171" y="72" w="63" h="9"/>
+    <tile id="15" x="234" y="63"/>
+    <tile id="19" x="234" y="72"/>
+    <tile id="3" x="171" y="126"/>
+    <tile id="3" x="180" y="135"/>
+    <tile id="3" x="198" y="153"/>
+    <rect id="5" x="171" y="135" w="9" h="99"/>
+    <tile id="9" x="171" y="234"/>
+    <tile id="9" x="180" y="225"/>
+    <tile id="9" x="198" y="207"/>
+    <rect id="11" x="189" y="225" w="117" h="9"/>
+    <rect id="11" x="180" y="234" w="135" h="9"/>
+    <tile id="10" x="306" y="225"/>
+    <tile id="10" x="315" y="234"/>
+    <tile id="10" x="288" y="207"/>
+    <rect id="5" x="306" y="144" w="9" h="81"/>
+    <rect id="5" x="315" y="135" w="9" h="99"/>
+    <tile id="4" x="315" y="126"/>
+    <tile id="4" x="306" y="135"/>
+    <rect id="11" x="207" y="207" w="81" h="9"/>
+    <rect id="11" x="207" y="153" w="81" h="9"/>
+    <rect id="11" x="189" y="135" w="117" h="9"/>
+    <rect id="11" x="180" y="126" w="135" h="9"/>
+    <tile id="4" x="288" y="153"/>
+    <rect id="5" x="198" y="162" w="9" h="45"/>
+    <rect id="5" x="288" y="162" w="9" h="45"/>
+    <rect id="0" x="207" y="162" w="81" h="45"/>
+    <rect id="0" x="180" y="216" w="126" h="9"/>
+    <rect id="0" x="180" y="144" w="18" h="72"/>
+    <rect id="0" x="198" y="144" w="108" h="9"/>
+    <rect id="0" x="297" y="153" w="9" h="63"/>
+    <rect id="2" x="63" y="63" w="99" h="108"/>
+    <rect id="2" x="81" y="207" w="90" h="45"/>
+    <rect id="2" x="126" y="252" w="261" h="36"/>
+    <rect id="2" x="171" y="243" w="216" h="9"/>
+    <rect id="2" x="324" y="27" w="63" h="216"/>
+    <rect id="2" x="297" y="27" w="27" h="99"/>
+    <rect id="2" x="243" y="63" w="54" h="63"/>
+    <rect id="2" x="162" y="81" w="81" h="45"/>
+    <rect id="2" x="162" y="126" w="9" h="81"/>
+    <rect id="2" x="126" y="171" w="36" h="36"/>
+  </floor>
+  <walls set="tiles">
+    <rect id="0" x="0" y="207" w="18" h="45"/>
+    <rect id="0" x="180" y="0" w="45" h="27"/>
+    <rect id="0" x="0" y="252" w="126" h="54"/>
+    <rect id="0" x="0" y="171" w="126" h="36"/>
+    <rect id="0" x="126" y="288" w="279" h="18"/>
+    <rect id="0" x="387" y="63" w="18" h="225"/>
+    <rect id="0" x="351" y="0" w="54" h="63"/>
+    <rect id="0" x="225" y="0" w="81" h="63"/>
+    <rect id="0" x="306" y="0" w="45" h="27"/>
+    <rect id="0" x="0" y="63" w="63" h="108"/>
+    <rect id="0" x="0" y="0" w="180" h="63"/>
+  </walls>
+  <objects>
+    <player x="30" y="227"/>
+    <floater x="256" y="75">
+      <node x="191" y="92"/>
+      <node x="212" y="138"/>
+      <node x="287" y="132"/>
+      <node x="325" y="87"/>
+    </floater>
+    <floater x="343" y="212">
+      <node x="352" y="124"/>
+      <node x="313" y="120"/>
+      <node x="291" y="241"/>
+    </floater>
+    <pod x="170" y="238" payload="2"/>
+    <pod x="352" y="267" payload="5"/>
+    <pod x="368" y="68" payload="5"/>
+    <transitionZone x="180" y="27" width="45" height="31" index="6" facing="90"/>
+    <transitionZone x="306" y="27" width="46" height="31" index="11" facing="90"/>
+  </objects>
+</level>

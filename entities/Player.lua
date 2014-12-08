@@ -26,10 +26,9 @@ function Player:initialize(x, y)
   self.weapon = "pistol"
   self.movement = true
   self.weaponTimer = 0
-  self.torch = lighting:addBeam(x, y, 0, 280, math.tau / 16, 30, 1)
+  self.torch = lighting:addBeam(x, y, 0, 250, math.tau / 14, 25, 1)
   self.torchGlow = lighting:addBeam(x, y, 0, 50, math.tau / 6, 0, 0.9)
   self.torchOn = true
-  self:toggleTorch(false)
   
   self.flash = lighting:addLight(x, y, 200, 100, 1)
   self.flash.alpha = 0
@@ -49,6 +48,7 @@ function Player:added()
   self.fixture:setCategory(2)
   self:setMass(2)
   self:setLinearDamping(12)
+  if self.world.index == 1 then self:toggleTorch(false) end
 end
 
 function Player:update(dt)
@@ -133,6 +133,7 @@ end
 function Player:damage(health)
   if self.dead then return end
   self.health = self.health - health
+  playRandom{"damage1", "damage2"}
   if self.health <= 0 then self:die() end
 end
 
@@ -149,6 +150,7 @@ function Player:die()
   self.movement = false
   self.flash.alpha = 0
   self.deathMap:play("death")
+  playRandom{"death1", "death2"}
   
   tween(self.torch, 0.35, {
     x = self.x + 20 * math.cos(self.angle) + 4 * math.cos(self.angle - math.tau / 4),
@@ -157,7 +159,7 @@ function Player:die()
   }, ease.quadOut)
   
   delay(0.7, function() fade.out(function()
-    ammo.world = Level:new(ammo.world.index, true)
+    ammo.world = Level:new(self.world.index, self.world.from, true)
   end) end)
 end
 

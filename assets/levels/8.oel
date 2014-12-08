@@ -1,0 +1,42 @@
+<level>
+  <width>405</width>
+  <height>306</height>
+  <collision set="collision">
+    <rect id="0" x="135" y="0" w="45" h="306"/>
+    <rect id="0" x="180" y="288" w="45" h="18"/>
+    <rect id="0" x="225" y="153" w="45" h="153"/>
+    <rect id="0" x="225" y="0" w="45" h="126"/>
+    <rect id="0" x="180" y="0" w="45" h="18"/>
+    <rect id="0" x="270" y="99" w="135" h="27"/>
+    <rect id="0" x="369" y="126" w="36" h="27"/>
+    <rect id="0" x="270" y="153" w="135" h="27"/>
+  </collision>
+  <floor set="tiles">
+    <rect id="2" x="180" y="207" w="45" h="81"/>
+    <rect id="13" x="180" y="198" w="45" h="9"/>
+    <rect id="12" x="180" y="18" w="45" h="180"/>
+    <rect id="12" x="225" y="126" w="45" h="27"/>
+    <rect id="15" x="270" y="126" w="9" h="27"/>
+    <rect id="0" x="279" y="126" w="126" h="27"/>
+  </floor>
+  <walls set="tiles">
+    <rect id="0" x="180" y="288" w="45" h="18"/>
+    <rect id="0" x="225" y="153" w="45" h="153"/>
+    <rect id="0" x="135" y="0" w="45" h="306"/>
+    <rect id="0" x="225" y="0" w="45" h="126"/>
+    <rect id="0" x="270" y="99" w="135" h="27"/>
+    <rect id="0" x="270" y="153" w="135" h="27"/>
+    <rect id="0" x="180" y="0" w="45" h="18"/>
+    <rect id="0" x="369" y="126" w="36" h="27"/>
+  </walls>
+  <objects>
+    <player x="194" y="265"/>
+    <transitionZone x="181" y="17" width="44" height="31" index="9" facing="90"/>
+    <mauler x="195" y="61">
+      <node x="204" y="155"/>
+    </mauler>
+    <pod x="197" y="84" payload="5"/>
+    <textZone x="181" y="243" width="43" height="45" text="Look, you're hallucinating. It's perfectly safe down there." time="3" delay="0" from="0"/>
+    <textZone x="316" y="122" width="56" height="35" text="Amusing" time="2" delay="0" from="9"/>
+  </objects>
+</level>

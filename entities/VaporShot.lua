@@ -7,7 +7,7 @@ function VaporShot:initialize(x, y, angle)
   self.width = VaporShot.width
   self.height = VaporShot.height
   self.angle = angle
-  self.speed = 200
+  self.speed = 170
   self.velx = math.cos(angle) * self.speed
   self.vely = math.sin(angle) * self.speed
   self.damage = 20

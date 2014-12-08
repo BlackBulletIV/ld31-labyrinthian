@@ -59,10 +59,10 @@
     <rect id="0" x="378" y="135" w="27" h="45"/>
   </walls>
   <objects>
-    <textZone x="18" y="135" width="90" height="45" text="Could have some trouble with rodents here. Use LMB to drive them off." time="4" delay="0"/>
+    <textZone x="18" y="135" width="90" height="45" text="Could have some trouble with rodents here. Use LMB to drive them off." time="4" delay="0" from="0"/>
     <pod x="268" y="120" payload="4"/>
     <pod x="197" y="120" payload="3"/>
     <player x="49" y="152"/>
-    <transitionZone x="325" y="136" width="52" height="43" index="4" facing="0"/>
+    <transitionZone x="333" y="136" width="45" height="44" index="4" facing="0"/>
   </objects>
 </level>

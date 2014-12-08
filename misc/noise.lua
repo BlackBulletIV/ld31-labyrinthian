@@ -17,3 +17,20 @@ function noise:update(dt)
   
   self.timer = self.timer + dt
 end
+
+function noise:draw(canvas, alternate)
+  love.graphics.setShader(self.effect)
+  love.graphics.setCanvas(alternate)
+  love.graphics.draw(canvas, 0, 0)
+  
+  canvas:clear()
+  love.graphics.setCanvas(canvas)
+  love.graphics.draw(postfx.exclusion, 0, 0)
+  love.graphics.setShader()
+  
+  postfx.exclusion:clear()
+  love.graphics.setCanvas(postfx.exclusion)
+  love.graphics.draw(canvas, 0, 0)
+  
+  postfx.swap()
+end

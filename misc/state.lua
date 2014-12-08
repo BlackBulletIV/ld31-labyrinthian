@@ -28,7 +28,8 @@ function state.saveLevel()
           type = e.class.name,
           x = e.x,
           y = e.y,
-          angle = e.angle
+          angle = e.angle,
+          patrol = e.patrol
         }
       end
     elseif instanceOf(Pod, e) then
@@ -58,6 +59,7 @@ function state.loadEnemies(world)
     else
       o = _G[v.type]:new(v.x, v.y)
       o.angle = v.angle
+      o.patrol = v.patrol
       world:add(o)
     end
   end
@@ -76,5 +78,11 @@ function state.createPlayer()
   o.torchOn = pl.torchOn
   o.torch.alpha = pl.torch.alpha
   o.torch.angle = pl.torch.angle
+  o.torchGlow.alpha = pl.torch.alpha
+  o.torchGlow.angle = pl.torch.angle
   return o
+end
+
+function state.resetLevels()
+  for i = 1, 99 do state[i] = nil end
 end

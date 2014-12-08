@@ -1,14 +1,16 @@
 Level = class("Level", PhysicalWorld)
 
-function Level:initialize(index, death)
+function Level:initialize(index, from, death)
   PhysicalWorld.initialize(self)
   lighting:clear()
+  lighting.active = true
   if death then fade.into() end
   love.audio.pause()
   bgSfx:resume()
 
   local xmlFile = love.filesystem.read("assets/levels/" .. index .. ".oel")
   self.index = index
+  self.from = from
   self.xml = slaxml:dom(xmlFile).root
   self.width = getText(self.xml, "width")
   self.height = getText(self.xml, "height")
@@ -75,6 +77,10 @@ function Level:loadObjects(o)
   
   for _, v in ipairs(findChildren(o, "transitionZone")) do
     self:add(TransitionZone:fromXML(v))
+  end
+  
+  for _, v in ipairs(findChildren(o, "endZone")) do
+    self:add(EndZone:fromXML(v))
   end
   
   for _, v in ipairs(findChildren(o, "textZone")) do

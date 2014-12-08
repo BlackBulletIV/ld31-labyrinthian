@@ -95,7 +95,7 @@
   </walls>
   <objects>
     <transitionZone x="18" y="135" width="45" height="46" index="3" facing="180"/>
-    <textZone x="252" y="72" width="108" height="69" text="Power outages can mess with your sense of direction..." time="3" delay="0"/>
+    <textZone x="252" y="72" width="108" height="69" text="Power outages can mess with your sense of direction..." time="3" delay="0" from="0"/>
     <player x="331" y="39"/>
   </objects>
 </level>

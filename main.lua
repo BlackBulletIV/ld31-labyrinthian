@@ -22,6 +22,7 @@ require("entities.Floor")
 require("entities.Bullet")
 require("entities.Crosshair")
 require("entities.TransitionZone")
+require("entities.EndZone")
 require("entities.Pod")
 require("entities.Spider")
 require("entities.Floater")
@@ -29,12 +30,14 @@ require("entities.VaporShot")
 require("entities.Door")
 require("entities.TextZone")
 require("entities.Decals")
+require("worlds.Intro")
 require("worlds.Level")
+require("worlds.Ending")
 
 TILE_SIZE = 9
 
 function love.load()
-  assets.loadFont("uni05.ttf", { 24, 16 }, "main")
+  assets.loadFont("uni05.ttf", { 24, 16, 8 }, "main")
   assets.loadShader("lighting-composite.frag", "lightingComposite")
   assets.loadShader("noise.frag")
   
@@ -54,9 +57,9 @@ function love.load()
   for _, v in pairs(assets.images) do v:setFilter("nearest", "nearest") end
   
   assets.loadSfx("bg.ogg")
-  assets.loadSfx("shoot1.ogg", 0.8)
-  assets.loadSfx("shoot2.ogg", 0.8)
-  assets.loadSfx("shoot3.ogg", 0.8)
+  assets.loadSfx("shoot1.ogg", 0.7)
+  assets.loadSfx("shoot2.ogg", 0.7)
+  assets.loadSfx("shoot3.ogg", 0.7)
   assets.loadSfx("step1.ogg", 0.5)
   assets.loadSfx("step2.ogg", 0.5)
   assets.loadSfx("step3.ogg", 0.5)
@@ -66,8 +69,8 @@ function love.load()
   assets.loadSfx("mauler-step3.ogg", "maulerStep3")
   assets.loadSfx("mauler-step4.ogg", "maulerStep4")
   assets.loadSfx("mauler-lunge.ogg", "maulerLunge")
-  assets.loadSfx("floater-idle.ogg", "floaterIdle", 1)
-  assets.loadSfx("floater-alert.ogg", "floaterAlert", 1)
+  assets.loadSfx("floater-idle.ogg", "floaterIdle", 1.2)
+  assets.loadSfx("floater-alert.ogg", "floaterAlert", 1.2)
   assets.loadSfx("floater-death1.ogg", "floaterDeath1")
   assets.loadSfx("floater-death2.ogg", "floaterDeath2")
   assets.loadSfx("floater-shoot1.ogg", "floaterShoot1")
@@ -78,6 +81,10 @@ function love.load()
   assets.loadSfx("spider-death1.ogg", "spiderDeath1")
   assets.loadSfx("spider-death2.ogg", "spiderDeath2")
   assets.loadSfx("torch.ogg")
+  assets.loadSfx("damage1.ogg", 0.7)
+  assets.loadSfx("damage2.ogg", 0.7)
+  assets.loadSfx("death1.ogg", 1.2)
+  assets.loadSfx("death2.ogg", 1.2)
   
   input.define("left", "a", "left")
   input.define("right", "d", "right")
@@ -86,6 +93,7 @@ function love.load()
   input.define{"fire", mouse = "l"}
   input.define("torch", "f")
   input.define("quit", "escape")
+  input.define("reset", "r")
   
   input.define("pause", "p")
   input.define("prev", "-")
@@ -103,7 +111,7 @@ function love.load()
   love.mouse.setGrabbed(true)
   
   bgSfx = assets.sfx.bg:loop()
-  ammo.world = Level:new(1)
+  ammo.world = Intro:new()
   paused = false
 end
 
@@ -114,8 +122,9 @@ function love.update(dt)
     postfx.update(dt)
     ammo.update(dt)
     
-    if input.pressed("prev") then ammo.world = Level:new(ammo.world.index - 1) end
-    if input.pressed("next") then ammo.world = Level:new(ammo.world.index + 1) end
+    if input.pressed("reset") then ammo.world = Level:new(ammo.world.index, ammo.world.from, true) end
+    if input.pressed("prev") then ammo.world = Level:new(ammo.world.index - 1, ammo.world.index) end
+    if input.pressed("next") then ammo.world = Level:new(ammo.world.index + 1, ammo.world.index) end
   end
   
   if input.pressed("pause") then paused = not paused end

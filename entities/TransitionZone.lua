@@ -38,12 +38,16 @@ function TransitionZone:update(dt)
     local angle = math.acos(math.clamp(-(facing * player), -1, 1)) -- the negation of the dot product is a dirty edit - no idea why it needs it
     
     if angle < self.facingRange then
-      state.saveLevel()
-      state.savePlayer()
-      ammo.world = Level:new(self.index)
-      self.transitioned = true
+      self:transition()
     end
   end
+end
+
+function TransitionZone:transition()
+  state.saveLevel()
+  state.savePlayer()
+  ammo.world = Level:new(self.index, ammo.world.index)
+  self.transitioned = true
 end
 
 function TransitionZone:collided(other, fixture, otherFixture, contact)

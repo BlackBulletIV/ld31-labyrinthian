@@ -12,7 +12,7 @@ function Mauler:initialize(x, y)
   Enemy.initialize(self, x, y, Mauler.width, Mauler.height)
   self.speed = 400
   self.alertSpeed = 1700
-  self.health = 80
+  self.health = 70
   self.lungeRange = 50
   self.lungeSpeed = 150
   self.walkTime = 1 / 2
@@ -22,11 +22,11 @@ function Mauler:initialize(x, y)
   self.map:add("walk", { 1, 2, 3, 2, 1, 4, 5, 4 }, 12, true)
   self.map:add("run", { 1, 2, 3, 2, 1, 4, 5, 4 }, 40, true)
   self.map:add("lunge", { 6, 7, 8, 9, 10 }, 35, false)
+  self.map:add("death", { 6, 7, 8, 9, 10 }, 20, false)
 end
 
 function Mauler:update(dt)
   Enemy.update(self, dt)
-  self.map:update(dt)
   
   if self.lunging then
     local player = self.world.player

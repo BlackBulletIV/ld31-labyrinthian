@@ -1,0 +1,44 @@
+<level>
+  <width>405</width>
+  <height>306</height>
+  <collision set="collision">
+    <rect id="0" x="0" y="0" w="405" h="171"/>
+    <rect id="0" x="0" y="171" w="36" h="36"/>
+    <rect id="0" x="0" y="207" w="207" h="99"/>
+    <rect id="0" x="243" y="207" w="162" h="99"/>
+    <rect id="0" x="207" y="297" w="36" h="9"/>
+  </collision>
+  <floor set="tiles">
+    <tile id="10" x="207" y="270"/>
+    <tile id="9" x="234" y="270"/>
+    <tile id="3" x="234" y="216"/>
+    <tile id="4" x="207" y="216"/>
+    <rect id="5" x="207" y="225" w="9" h="45"/>
+    <rect id="5" x="234" y="225" w="9" h="45"/>
+    <rect id="1" x="216" y="216" w="18" h="63"/>
+    <rect id="1" x="207" y="279" w="36" h="27"/>
+    <rect id="5" x="189" y="171" w="9" h="36"/>
+    <rect id="5" x="252" y="171" w="9" h="36"/>
+    <rect id="1" x="198" y="171" w="54" h="45"/>
+    <rect id="2" x="36" y="171" w="153" h="36"/>
+    <rect id="2" x="261" y="171" w="144" h="36"/>
+  </floor>
+  <walls set="tiles">
+    <rect id="0" x="0" y="171" w="36" h="36"/>
+    <rect id="0" x="0" y="270" w="207" h="36"/>
+    <rect id="0" x="243" y="270" w="162" h="36"/>
+    <rect id="0" x="207" y="297" w="36" h="9"/>
+    <rect id="0" x="0" y="207" w="207" h="63"/>
+    <rect id="0" x="243" y="207" w="162" h="63"/>
+    <rect id="0" x="0" y="0" w="405" h="171"/>
+  </walls>
+  <objects>
+    <player x="219" y="271"/>
+    <circleLight x="396" y="184" radius="150" innerRadius="20" intensity="1" alpha="255"/>
+    <endZone x="369" y="171" width="36" height="36" restart="0" facing="0"/>
+    <endZone x="11" y="171" width="53" height="35" restart="1" facing="180"/>
+    <textZone x="207" y="260" width="42" height="45" text="We've had a couple problems with maintainence, so I'll need you to take a left." time="5" delay="0" from="0"/>
+    <textZone x="302" y="172" width="13" height="34" text="Don't do it!" time="1" delay="0" from="0"/>
+    <textZone x="89" y="171" width="46" height="35" text="Thank you" time="2" delay="0" from="0"/>
+  </objects>
+</level>

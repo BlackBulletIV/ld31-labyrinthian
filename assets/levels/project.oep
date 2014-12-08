@@ -50,11 +50,19 @@
       </values>
     </object>
     
+    <object name="endZone" image="editor.png" width="9" height="9" imageWidth="9" imageHeight="9" imageOffsetX="18" resizableX="true" resizableY="true">
+      <values>
+        <integer name="restart" default="0" />
+        <number name="facing" default="90" />
+      </values>
+    </object>
+    
     <object name="textZone" image="editor.png" width="9" height="9" imageWidth="9" imageHeight="9" imageOffsetX="36" resizableX="true" resizableY="true">
       <values>
         <string name="text" />
         <number name="time" default="3" />
         <number name="delay" default="0" />
+        <integer name="from" default="0" />
       </values>
     </object>
     

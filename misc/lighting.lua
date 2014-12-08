@@ -123,6 +123,7 @@ end
 
 function lighting:draw(canvas, alternate)
   self.canvas:clear(self.ambient, self.ambient, self.ambient)
+  --if not ammo.world.walls then return end
   
   for light in self.lights:iterate() do
     if light.alpha > 0 then
